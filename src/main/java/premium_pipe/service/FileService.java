@@ -2,6 +2,7 @@ package premium_pipe.service;
 
 
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import premium_pipe.entity.FileEntity;
 import premium_pipe.enums.FileType;
+import premium_pipe.exception.FolderCreationException;
 import premium_pipe.exception.NotFoundException;
 import premium_pipe.mapper.FileMapper;
 import premium_pipe.model.response.FileResponse;
@@ -23,7 +25,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Calendar;
-import java.util.Objects;
+
 import java.util.UUID;
 
 @Service
@@ -36,13 +38,18 @@ public class FileService {
     private String folderName = "files";
 
     public void upload(MultipartFile file) {
+        if (file == null) {
+            throw new IllegalArgumentException("File must not be null");
+        }
         String pathFolder = getYmDString();
         String key = UUID.randomUUID().toString();
-        String extension = getExtension(Objects.requireNonNull(file.getOriginalFilename()));
-
+        String extension = FilenameUtils.getExtension(file.getOriginalFilename());
         File folder = new File(folderName + "/" + pathFolder);
-        if(!folder.exists()){
-            folder.mkdirs();
+        if(!folder.exists()) {
+           boolean bool = folder.mkdirs();
+           if(!bool){
+               throw new FolderCreationException("Failed to create folder");
+           }
         }
         try {
             byte [] bytes = file.getBytes();
@@ -103,9 +110,10 @@ public class FileService {
                     .body(resource);
         }
         catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+            throw new RuntimeException(e);
         }
     }
+
 
     public FileResponse getById(String id){
         FileResponse fileResponse = mapper.toDTO(getFileEntity(id));
