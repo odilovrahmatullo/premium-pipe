@@ -19,14 +19,13 @@ import java.util.Map;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CategoryEntity {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    @Column(nullable = false, unique = true)
-    @Convert(converter = HashMapConverter.class)
-    @JsonFieldConstraint
-    private Map<String, String> name;
-    @CreationTimestamp
-    private LocalDateTime createdDate;
-    private LocalDateTime deletedDate;
+        @Id
+        @GeneratedValue(strategy = GenerationType.IDENTITY)
+        private Long id;
+        @Column(nullable = false, unique = true)
+        @Convert(converter = HashMapConverter.class)
+        @JsonFieldConstraint
+        private Map<String, String> name;
+        @CreationTimestamp
+        private LocalDateTime createdDate;
 }

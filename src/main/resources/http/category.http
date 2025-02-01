@@ -1,5 +1,8 @@
-### create category
-POST localhost:8080/api/category
-Content-Type: application/json
+### create file
+POST localhost:8080/api/files/upload
+Content-Type: multipart/form-data
+Content-Disposition: form-data; name="file"; filename="iam.jpg"
+
+< C:/Users/HP/Pictures/Telegram Desktop/iam.jpg
 
 

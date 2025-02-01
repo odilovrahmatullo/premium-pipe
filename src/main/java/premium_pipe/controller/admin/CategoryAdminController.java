@@ -8,10 +8,16 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import premium_pipe.entity.CategoryEntity;
+import premium_pipe.entity.LanguageEntity;
 import premium_pipe.model.request.CategoryRequest;
 import premium_pipe.model.request.RequestParams;
+import premium_pipe.model.response.LanguageResponse;
 import premium_pipe.model.response.admin.CategoryAdminResponse;
+import premium_pipe.model.response.admin.ProductAdminResponse;
+import premium_pipe.service.LanguageService;
 import premium_pipe.service.admin.CategoryAdminService;
+import premium_pipe.service.admin.ProductAdminService;
 import premium_pipe.util.Paginate;
 import java.util.List;
 
@@ -21,11 +27,18 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CategoryAdminController {
     private final CategoryAdminService categoryAdminService;
+    private final LanguageService languageService;
+    private final ProductAdminService productAdminService;
 
     @GetMapping("/create")
     public String createCategory(final Model model){
         CategoryRequest categoryRequest = new CategoryRequest();
+        List<LanguageResponse> languages = languageService.getActives();
+        LanguageEntity language = languageService.findDefault();
         model.addAttribute("object",categoryRequest);
+        model.addAttribute("languages",languages);
+        model.addAttribute("defaultLang",language);
+
         return "admin/category/create";
     }
 
@@ -47,24 +60,50 @@ public class CategoryAdminController {
         return "redirect:/admin/category";
     }
 
-    @GetMapping({"","/"})
-    public String list(final RequestParams params,final Model model){
-        Page<CategoryAdminResponse> categoryResponses = categoryAdminService.list(params);
-        int totalPages = categoryResponses.getTotalPages();
-        List<Integer> pagination  = Paginate.get_pagination(totalPages,params.page());
+        @GetMapping({"","/"})
+        public String list(final RequestParams params,final Model model){
+            Page<CategoryAdminResponse> categoryResponses = categoryAdminService.list(params);
+            int totalPages = categoryResponses.getTotalPages();
+            List<Integer> pagination  = Paginate.get_pagination(totalPages,params.page());
+            LanguageEntity language = languageService.findDefault();
+            model.addAttribute("defaultLang",language);
+            model.addAttribute("pages",pagination);
+            model.addAttribute("categories",categoryResponses);
+            model.addAttribute("page",params.page());
+            model.addAttribute("size",params.size());
+            model.addAttribute("totalPages",totalPages);
+            return "admin/category/list";
+        }
+
+    @GetMapping("/{id}")
+    public String viewCategory(@PathVariable Long id, final Model model,
+                               @Valid RequestParams params) {
+        CategoryEntity category = categoryAdminService.getCategoryEntity(id);
+        Page<ProductAdminResponse> products = productAdminService.getProductsByCategory(category,params);
+        int totalPages = products.getTotalPages();
+        List<Integer> pagination = Paginate.get_pagination(totalPages,params.page());
+        LanguageEntity language = languageService.findDefault();
+        model.addAttribute("defaultLang",language);
         model.addAttribute("pages",pagination);
-        model.addAttribute("objects",categoryResponses);
         model.addAttribute("page",params.page());
         model.addAttribute("size",params.size());
         model.addAttribute("totalPages",totalPages);
-        return "admin/category/list";
+        model.addAttribute("category", category);
+        model.addAttribute("products",products);
+        return "admin/category/view";
     }
+
 
     @GetMapping("/{id}/edit")
     public String one(@PathVariable("id") final Long id, final Model model){
         CategoryAdminResponse car = categoryAdminService.getOne(id);
+        LanguageEntity language = languageService.findDefault();
+        List<LanguageResponse> languages = languageService.getActives();
+        model.addAttribute("languages",languages);
+        model.addAttribute("defaultLang",language);
         model.addAttribute("object",car);
-        return "admin/category/admin";
+        model.addAttribute("id",id);
+        return "admin/category/edit";
     }
 
     @PostMapping("/{id}/edit")
@@ -92,11 +131,11 @@ public class CategoryAdminController {
 
     @PostMapping("/{id}/delete")
     public String deleteCategory(@PathVariable("id") final Long id,
-                                  RedirectAttributes redirectAttributes,
+                                 final RedirectAttributes redirectAttributes,
                                  final Model model){
         try{
             categoryAdminService.delete(id);
-            redirectAttributes.addAttribute("successMessage", "Category Successfully deleted");
+            redirectAttributes.addFlashAttribute("successMessage", "Deleted");
         }   catch (Exception e){
             model.addAttribute("errorMessage",e.getMessage());
         }

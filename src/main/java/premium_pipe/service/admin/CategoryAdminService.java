@@ -14,6 +14,7 @@ import premium_pipe.model.response.admin.CategoryAdminResponse;
 import premium_pipe.repository.CategoryRepository;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -52,8 +53,12 @@ public class CategoryAdminService {
 
     public void delete(Long id) {
         CategoryEntity category = getCategoryEntity(id);
-        category.setDeletedDate(LocalDateTime.now());
-        categoryRepository.save(category);
+        categoryRepository.delete(category);
+    }
+
+    public List<CategoryAdminResponse> getCategoryList() {
+        List<CategoryEntity> categoryEntities = categoryRepository.getList();
+        return categoryEntities.stream().map(categoryMapper::toDTO).toList();
     }
 
 }

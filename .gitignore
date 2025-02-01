@@ -6,6 +6,7 @@ build/
 !**/src/test/**/build/
 
 .env
+.files
 .DS_Store
 ### Uploads ###
 /uploads
