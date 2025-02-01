@@ -2,14 +2,19 @@ package premium_pipe.controller.admin;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import premium_pipe.model.request.LanguageRequest;
+import premium_pipe.model.request.RequestParams;
 import premium_pipe.model.response.LanguageResponse;
 import premium_pipe.service.admin.LanguageAdminService;
+import premium_pipe.util.Paginate;
+
+import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
@@ -43,10 +48,23 @@ public class LanguageAdminController {
         return "redirect:/admin/language";
     }
 
+    @GetMapping({"","/"})
+    public String list(@Valid RequestParams params,final Model model){
+        Page<LanguageResponse> languages = languageAdminService.getLanguages(params);
+        int totalPages  = languages.getTotalPages();
+        List<Integer>pagination = Paginate.get_pagination(totalPages,params.page());
+        model.addAttribute("pagination",pagination);
+        model.addAttribute("languages",languages);
+        model.addAttribute("page",params.page());
+        model.addAttribute("size",params.size());
+        return "admin/language/list";
+    }
+
     @GetMapping("/{id}/edit")
     public String one(@PathVariable("id") Long id,Model model){
         LanguageResponse lang = languageAdminService.getLang(id);
         model.addAttribute("object",lang);
+        model.addAttribute("id",id);
         return "admin/language/edit";
     }
 

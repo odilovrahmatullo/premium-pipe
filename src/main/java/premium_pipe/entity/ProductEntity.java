@@ -7,6 +7,8 @@ import premium_pipe.util.HashMapConverter;
 import premium_pipe.util.validator.JsonFieldConstraint;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 @Data
 @Entity
@@ -25,16 +27,21 @@ public class ProductEntity {
     @JsonFieldConstraint
     @Column(columnDefinition = "TEXT")
     private Map<String, String> description;
-    private Integer code;
-    private String diameter;
-    private String packages;
-    private String unit;
+
     @ManyToOne
     @JoinColumn(name = "category_id")
     private CategoryEntity category;
+
+    @Column(name = "slug")
+    private String slug;
+
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
+    private List<ProductInfoEntity> infos = new ArrayList<>();
+
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
+    private List<ProductFileEntity> files = new ArrayList<>();
+
     @Column(name = "created_date")
     @CreationTimestamp
     private LocalDateTime createdDate;
-    @Column(name = "deleted_date")
-    private LocalDateTime deletedDate;
 }

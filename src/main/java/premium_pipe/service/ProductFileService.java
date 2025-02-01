@@ -2,10 +2,8 @@ package premium_pipe.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import premium_pipe.entity.FileEntity;
 import premium_pipe.entity.ProductEntity;
 import premium_pipe.entity.ProductFileEntity;
-import premium_pipe.model.response.FileResponse;
 import premium_pipe.repository.ProductFileRepository;
 
 import java.util.ArrayList;
@@ -15,27 +13,26 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ProductFileService {
     private final ProductFileRepository productFileRepository;
-    private final FileService fileService;
-
-
-    public void create(ProductEntity productEntity, List<String> fileIds) {
-        for (String fileId : fileIds) {
-            FileEntity file = fileService.getFileEntity(fileId);
+    public void create(ProductEntity productEntity, List<String> imagesPaths) {
+        for(String imagePath:imagesPaths){
+            int index = imagePath.lastIndexOf("uploads");
+            String relativePath = imagePath.substring(index-1);
+            relativePath = relativePath.replace('\\', '/');
             ProductFileEntity pf = ProductFileEntity.builder()
-                    .file(file)
                     .product(productEntity)
+                    .image(relativePath)
                     .build();
             productFileRepository.save(pf);
         }
     }
 
-    public List<FileResponse> getProductFiles(ProductEntity entity){
+    public List<String> getProductFiles(ProductEntity entity){
         List<ProductFileEntity> fileResponses = productFileRepository.getProductFIle(entity);
-        List<FileResponse> files = new ArrayList<>();
-        for(ProductFileEntity file : fileResponses){
-            files.add(fileService.getById(file.getFile().getId()));
+        List<String> images = new ArrayList<>();
+        for(ProductFileEntity image : fileResponses){
+            images.add(image.getImage());
         }
-        return files;
+        return images;
     }
 
 

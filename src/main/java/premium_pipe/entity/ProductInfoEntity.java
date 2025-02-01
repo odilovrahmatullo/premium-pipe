@@ -23,7 +23,6 @@ public class ProductInfoEntity {
     @ManyToOne
     @JoinColumn(name = "product_id")
     private ProductEntity product;
-
     @Column(name = "code_value")
     private Integer codeValue;
     @Column(name = "diameter_value")
@@ -35,6 +34,4 @@ public class ProductInfoEntity {
     @CreationTimestamp
     @Column(name = "created_date")
     private LocalDateTime createdDate;
-    @Column(name = "deleted_date")
-    private LocalDateTime deletedDate;
 }

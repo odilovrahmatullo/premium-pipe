@@ -1,0 +1,115 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ru" data-bs-theme="auto">
+
+<head th:replace="admin/blocks/header::adminHead('Categories')"></head>
+
+<body>
+
+<nav th:replace="admin/blocks/navbar::navbar"></nav>
+
+<!-- MAIN CONTENT -->
+<div class="main-content">
+  <div class="messages">
+    <div class="alert alert notifs" role="alert"></div>
+  </div>
+  <div class="container-fluid">
+    <div class="row justify-content-center">
+      <div class="col-12">
+        <!-- Header -->
+        <div class="header mb-0">
+          <div class="header-body top-scroller">
+            <div class="row align-items-center">
+              <div class="col">
+                <!-- Title -->
+                <h1 class="header-title text-truncate">
+                  Categories
+                </h1>
+              </div>
+            </div> <!-- / .row -->
+          </div>
+          <div class="card mt-4">
+            <div class="card-body" style="padding: 20px;">
+              <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                  <li class="breadcrumb-item"><a href="#">Main</a></li>
+                  <li class="breadcrumb-item"><a th:href="@{/admin/category}">Categories</a></li>
+                  <li class="breadcrumb-item active" aria-current="page">
+                    Category
+                  </li>
+                </ol>
+              </nav>
+            </div>
+          </div>
+          <!-- Content -->
+          <form role="form" class="row" method="post" enctype="multipart/form-data"
+                th:action="@{/admin/category/{id}/edit(id=${id})}" th:object="${object}">
+            <div class="col-12 col-xl-8">
+              <div class="card mt-3">
+                <div class="card-header p-4 pb-0">
+                  <ul class="nav nav-tabs" id="myTab" role="tablist">
+                    <li class="nav-item" role="presentation" th:each="lang : ${languages}">
+                      <button class="nav-link px-3 py-2 active" th:id="tab_ + ${ lang.code }"
+                              data-bs-toggle="tab"
+                              th:data-bs-target="'#' + ${lang.code}" type="button" role="tab"
+                              th:aria-controls="${lang.code}"
+                              aria-selected="false" th:text="${lang.name}"
+                              th:if='${lang.isDefault()}'></button>
+
+                      <button class="nav-link px-3 py-2" th:id="tab_ + ${ lang.code }"
+                              data-bs-toggle="tab"
+                              th:data-bs-target="'#' + ${lang.code}" type="button" role="tab"
+                              th:aria-controls="${lang.code}"
+                              aria-selected="true" th:text="${lang.name}"
+                              th:unless='${lang.isDefault()}'></button>
+                    </li>
+                  </ul>
+                </div>
+                <div class="card-body p-5">
+                  <div class="tab-content" id="myTabContent">
+                    <div class="" th:each="lang : ${languages}"
+                         th:attr="class=${lang.isDefault() ? 'tab-pane fade show active' : 'tab-pane fade'}"
+                         th:id="${lang.code}" role="tabpanel" th:aria-labelledby="${lang.code}">
+                      <div class="form-group">
+                        <!-- Label  -->
+                        <label class="form-label required">
+                          Name
+                        </label>
+                        <br>
+                        <!-- Input -->
+                        <input
+                                type="text"
+                                class="form-control"
+                                th:name="name[ + ${lang.code} + ]"
+                                th:field="*{name[__${lang.code}__]}"
+                        >
+
+                        <div class="invalid-feedback" style="display: block;"
+                             th:if="${#fields.hasErrors('name') && lang.isDefault()}"
+                             th:errors="*{name}"></div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="btn-box text-end">
+                    <a th:href="@{admin/category}" class="btn w-30 btn-secondary">
+                      Cancel
+                    </a>
+                    <input type="submit" href="#" class="btn w-40 btn-primary" value="Сохранить">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </form>
+          <!-- Content End -->
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div th:replace="admin/blocks/scripts::scripts"></div>
+<script th:src="@{/admin/assets/js/editor.js}"></script>
+
+</body>
+
+</html>

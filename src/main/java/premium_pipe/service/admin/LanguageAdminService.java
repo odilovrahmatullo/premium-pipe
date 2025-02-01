@@ -3,11 +3,15 @@ package premium_pipe.service.admin;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import premium_pipe.entity.LanguageEntity;
 import premium_pipe.exception.NotFoundException;
 import premium_pipe.mapper.LanguageMapper;
 import premium_pipe.model.request.LanguageRequest;
+import premium_pipe.model.request.RequestParams;
 import premium_pipe.model.response.LanguageResponse;
 import premium_pipe.repository.LanguageRepository;
 
@@ -55,4 +59,9 @@ public class LanguageAdminService {
         languageRepository.save(entity);
     }
 
+    public Page<LanguageResponse> getLanguages(RequestParams params) {
+        Pageable pageable = PageRequest.of(params.page(), params.size());
+        Page<LanguageEntity> languages = languageRepository.getLangs(pageable,params.search());
+        return languages.map(languageMapper::entityToResponse);
+    }
 }

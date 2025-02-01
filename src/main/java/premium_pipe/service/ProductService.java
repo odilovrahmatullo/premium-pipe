@@ -33,7 +33,7 @@ public class ProductService {
     }
 
     public ProductResponse getById(Long id, HttpServletRequest request) {
-        ProductEntity entity = getProductEntity(id);
+    /*    ProductEntity entity = getProductEntity(id);
         return ProductResponse.builder()
                 .name(localizeMapper.translate(entity.getName(),request))
                 .description(localizeMapper.translate(entity.getDescription(), request))
@@ -41,7 +41,8 @@ public class ProductService {
                 .createdDate(entity.getCreatedDate())
                 .productInfos(productInfoService.infoResponses(entity))
                 .fileIds(productFileService.getProductFiles(entity))
-                .build();
+                .build();*/
+        return null;
     }
 
     public ProductEntity getProductEntity(Long id){

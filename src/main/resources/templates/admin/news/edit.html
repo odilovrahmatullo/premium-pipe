@@ -1,0 +1,204 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en" data-bs-theme="auto">
+
+<head th:replace="~{admin/blocks/header::adminHead('News')}"></head>
+
+<body>
+
+<nav th:replace="~{admin/blocks/navbar::navbar}"></nav>
+
+<!-- MAIN CONTENT -->
+<div class="main-content">
+    <div class="messages">
+        <div class="alert alert notifs" role="alert"></div>
+    </div>
+    <div class="container-fluid">
+        <div class="row justify-content-center">
+            <div class="col-12">
+                <!-- Header -->
+                <div class="header mb-0">
+                    <div class="header-body top-scroller">
+                        <div class="row align-items-center">
+                            <div class="col">
+                                <!-- Title -->
+                                <h1 class="header-title text-truncate">
+                                    News
+                                </h1>
+
+                            </div>
+                        </div> <!-- / .row -->
+                    </div>
+                    <div class="card mt-4">
+                        <div class="card-body" style="padding: 20px;">
+                            <nav aria-label="breadcrumb">
+                                <ol class="breadcrumb">
+                                    <li class="breadcrumb-item"><a href="#">Main</a></li>
+                                    <li class="breadcrumb-item"><a th:href="@{/admin/news}">News</a></li>
+                                    <li class="breadcrumb-item active" aria-current="page">
+                                        News
+                                    </li>
+                                </ol>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <!-- Content -->
+                    <form role="form" class="row" method="post" enctype="multipart/form-data"
+                          th:action="@{/admin/news/{id}/edit(id=${id})}" th:object="${object}">
+                        <div class="col-12 col-xl-8">
+                            <div class="card mt-3">
+                                <div class="card-header p-4 pb-0">
+                                    <ul class="nav nav-tabs" id="myTab" role="tablist">
+                                        <li class="nav-item" role="presentation" th:each="lang : ${languages}">
+                                            <button class="nav-link px-3 py-2 active" th:id="tab_ + ${ lang.code }"
+                                                    data-bs-toggle="tab"
+                                                    th:data-bs-target="'#' + ${lang.code}" type="button" role="tab"
+                                                    th:aria-controls="${lang.code}"
+                                                    aria-selected="false" th:text="${lang.name}"
+                                                    th:if='${lang.isDefault()}'></button>
+
+                                            <button class="nav-link px-3 py-2" th:id="tab_ + ${ lang.code }"
+                                                    data-bs-toggle="tab"
+                                                    th:data-bs-target="'#' + ${lang.code}" type="button" role="tab"
+                                                    th:aria-controls="${lang.code}"
+                                                    aria-selected="true" th:text="${lang.name}"
+                                                    th:unless='${lang.isDefault()}'></button>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="card-body p-5">
+                                    <div class="tab-content" id="myTabContent">
+                                        <div class="" th:each="lang : ${languages}"
+                                             th:attr="class=${lang.isDefault() ? 'tab-pane fade show active' : 'tab-pane fade'}"
+                                             th:id="${lang.code}" role="tabpanel" th:aria-labelledby="${lang.code}">
+                                            <div class="form-group">
+                                                <!-- Label  -->
+                                                <label class="form-label required">
+                                                    Title
+                                                </label>
+                                                <br>
+                                                <!-- Input -->
+                                                <input
+                                                        type="text"
+                                                        class="form-control"
+                                                        th:name="title[ + ${lang.code} + ]"
+                                                        th:field="*{title[__${lang.code}__]}"
+                                                >
+
+                                                <div class="invalid-feedback" style="display: block;"
+                                                     th:if="${#fields.hasErrors('title') && lang.isDefault()}"
+                                                     th:errors="*{title}"></div>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <!-- Label -->
+                                                <label class="form-label mb-1">
+                                                    Description
+                                                </label>
+                                                <br>
+                                                <!-- Textarea -->
+                                                <textarea class="editor"
+                                                          th:name="description[ + ${lang.code} + ]"
+                                                          th:field="*{description[__${lang.code}__]}"
+                                                          placeholder="Text"></textarea>
+
+                                                <div class="invalid-feedback" style="display: block;"
+                                                     th:if="${#fields.hasErrors('description') && lang.isDefault()}"
+                                                     th:errors="*{description}"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-12 col-xl-4">
+                            <div class="card mt-3">
+                                <div class="card-body p-5">
+                                    <div class="form-group">
+                                        <!-- Label  -->
+                                        <label class="form-label mb-1">
+                                            Banner
+                                        </label>
+                                        <div class="dropzone dropzone-multiple border-0" data-max="1"
+                                             data-delete="/api/files/delete"
+                                             data-url="/api/files/upload" th:data-file-key="${dropzoneKey}">
+                                            <!-- Fallback -->
+                                            <div class="dz-preview d-none"></div>
+                                            <div class="fallback">
+                                                <div class="custom-file">
+                                                    <input type="file" name="file" class="form-control"
+                                                           id="customFileUploadMultiple">
+                                                    <label class="form-label" for="customFileUploadMultiple">Choose
+                                                        file</label>
+                                                </div>
+                                            </div>
+
+                                            <!-- Preview -->
+                                            <div class="dz-preview-container" style="padding: 0;"
+                                                 id="dropzone-previews">
+                                                <div class="dz-preview dz-processing dz-complete dz-image-preview"
+                                                     style="position: relative;" th:if="${image != null}">
+                                                    <div class="dz-image avatar">
+                                                        <img data-dz-thumbnail="" alt="Image" th:src="${image}">
+                                                    </div>
+                                                    <div class="dz-details">
+                                                        <div class="dz-filename"><span data-dz-name="">Image</span>
+                                                        </div>
+                                                    </div>
+                                                    <a class="dz-remove"
+                                                       onclick="var result = confirm('Want to delete?');if (result){submit_form('delete-form-delete-image')}"
+                                                       data-dz-remove>delete</a>
+                                                    <div th:action="@{/admin/news/{id}/deleteImage(id=${id})}"
+                                                         id="delete-form-delete-image" method="post"></div>
+                                                </div>
+
+                                                <div class="dz-preview dz-processing dz-complete dz-image-preview"
+                                                     th:if="${requestImage != null}">
+                                                    <div class="dz-image">
+                                                        <img data-dz-thumbnail="" alt="Img"
+                                                             th:src="${'/files/' + requestImage}">
+                                                    </div>
+                                                    <div class="dz-details">
+                                                        <div class="dz-filename"><span data-dz-name="">Image</span>
+                                                        </div>
+                                                    </div>
+                                                    <a class="dz-remove"
+                                                       onclick="var result = confirm('Want to delete?');if (result){submit_form('delete-form-image')}"
+                                                       data-dz-remove>Delete</a>
+                                                    <div th:action="@{/api/files/delete}" id="delete-form-image"
+                                                         method="post">
+                                                        <input type="hidden" name="filePath" th:value="${requestImage}">
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                        <!-- Dropzone -->
+                                    </div>
+
+                                    <div class="btn-box text-end">
+                                        <a th:href="@{admin/news}" class="btn w-30 btn-secondary">
+                                            Cancel
+                                        </a>
+                                        <input type="submit" href="#" class="btn w-40 btn-primary" value="Сохранить">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </form>
+                    <!-- Content End -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:replace="~{admin/blocks/scripts::scripts}"></div>
+<script th:src="@{/admin/assets/js/editor.js}"></script>
+
+</body>
+
+</html>

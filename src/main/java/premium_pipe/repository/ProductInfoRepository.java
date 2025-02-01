@@ -8,6 +8,6 @@ import premium_pipe.entity.ProductInfoEntity;
 import java.util.List;
 
 public interface ProductInfoRepository extends CrudRepository<ProductInfoEntity,Long> {
-    @Query("FROM ProductInfoEntity where product = ?1 and deletedDate is null")
+    @Query("FROM ProductInfoEntity where product = ?1")
     List<ProductInfoEntity> getProductsInfos(ProductEntity product);
 }

@@ -1,19 +1,19 @@
 package premium_pipe.service.admin;
 
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import premium_pipe.entity.FileEntity;
 import premium_pipe.entity.GalleryEntity;
 import premium_pipe.exception.NotFoundException;
 import premium_pipe.mapper.GalleryMapper;
-import premium_pipe.model.request.GalleryRequest;
 import premium_pipe.model.request.RequestParams;
 import premium_pipe.model.response.GalleryResponse;
 import premium_pipe.repository.GalleryRepository;
-import premium_pipe.service.FileService;
+import premium_pipe.service.FileSessionService;
+import premium_pipe.service.FileUploadService;
 
 import java.time.LocalDateTime;
 
@@ -21,40 +21,33 @@ import java.time.LocalDateTime;
 @RequiredArgsConstructor
 public class GalleryAdminService {
     private final GalleryRepository galleryRepository;
-    private final FileService fileService;
     private final GalleryMapper galleryMapper;
+    private final FileSessionService fileSessionService;
+    private final FileUploadService fileUploadService;
 
-    public void create(GalleryRequest request) {
-        FileEntity entity = fileService.getFileEntity(request.fileId());
+    public void create(final HttpSession session) {
+        String dropzoneKey = GalleryEntity.class.getName();
+        String imagePath = fileSessionService.getImage(dropzoneKey,session);
+        int index = imagePath.lastIndexOf("uploads");
+        String relativePath = imagePath.substring(index-1);
+        relativePath = relativePath.replace('\\', '/');
         GalleryEntity gallery = GalleryEntity.builder()
-                .file(entity)
-                .fileType(fileService.setFileType(entity))
+                .image(relativePath)
+                .fileType(fileUploadService.setFileType(imagePath))
                 .build();
         galleryRepository.save(gallery);
+        fileSessionService.deleteFilesFromSession(dropzoneKey, session);
     }
 
     public Page<GalleryResponse> getGalleries(RequestParams params) {
         Pageable pageable = PageRequest.of(params.page(), params.size());
-        Page<GalleryEntity> galleries = galleryRepository.getGalleries(pageable);
+        Page<GalleryEntity> galleries = galleryRepository.getGalleries(pageable,params.search());
         return galleries.map(galleryMapper::toDTO);
-    }
-
-    public GalleryResponse getGalleryResponse(Long id) {
-        GalleryEntity gallery = getGalleryEntity(id);
-        return galleryMapper.toDTO(gallery);
     }
 
     public GalleryEntity getGalleryEntity(Long id) {
         return galleryRepository.getGallery(id)
                 .orElseThrow(() -> new NotFoundException("Gallery not found"));
-    }
-
-    public void update(Long id, GalleryRequest request) {
-        GalleryEntity gallery = getGalleryEntity(id);
-        FileEntity entity = fileService.getFileEntity(request.fileId());
-        gallery.setFile(entity);
-        gallery.setFileType(fileService.setFileType(entity));
-        galleryRepository.save(gallery);
     }
 
     public void delete(Long id) {

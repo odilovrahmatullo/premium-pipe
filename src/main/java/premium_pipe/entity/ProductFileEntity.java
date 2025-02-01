@@ -22,13 +22,10 @@ public class ProductFileEntity {
     @ManyToOne
     @JoinColumn(name = "product_id")
     private ProductEntity product;
-    @ManyToOne
-    @JoinColumn(name = "file_id")
-    private FileEntity file;
+    @Column(name = "image")
+    private String image;
     @CreationTimestamp
     @Column(name = "created_date")
     private LocalDateTime createdDate;
-    @Column(name = "deleted_date")
-    private LocalDateTime deletedDate;
 
 }

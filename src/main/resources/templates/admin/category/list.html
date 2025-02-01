@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ru" data-bs-theme="auto">
+
+<head th:replace="~{admin/blocks/header::adminHead('Categories')}"></head>
+
+<body>
+
+<nav th:replace="~{admin/blocks/navbar::navbar}"></nav>
+
+<!-- MAIN CONTENT -->
+<div class="main-content">
+  <div th:replace="~{admin/blocks/message::message}"></div>
+  <div class="container-fluid">
+    <div class="row justify-content-center">
+      <div class="col-12">
+        <!-- Header -->
+        <div class="header mb-0">
+          <div class="card mt-4">
+            <div class="card-body" style="padding: 20px;">
+              <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                  <li class="breadcrumb-item"><a th:href="@{/admin/category}">Main</a></li>
+                  <li class="breadcrumb-item active" aria-current="page">Categories</li>
+                </ol>
+              </nav>
+              <div class="col-auto">
+                <!-- Navigation (button group) -->
+                <a th:href="@{/admin/category/create}" class="btn btn-info ms-2 float-end">
+                  Add Category
+                </a>
+              </div>
+            </div>
+          </div>
+          <!-- Content -->
+          <div class="card" id="categoryList">
+            <div class="table-responsive" style="padding: 20px;">
+              <table class="table table-sm table-hover table-nowrap card-table">
+                <thead>
+                <tr>
+                  <th>№</th>
+                  <th>Category Name</th>
+                  <th>Created Date</th>
+                  <th></th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="category, index : ${categories}">
+                  <td th:text="${index.count}"></td>
+                  <td>
+                    <p class="item-phone text-reset" th:text="${category.name.get(defaultLang.code)}"></p>
+                  </td>
+                  <td th:text="${#temporals.format(category.createdDate, 'dd-MM-yyyy')}"></td>
+                  <td>
+                    <div class="d-flex justify-content-end">
+                      <a th:href="@{/admin/category/{id}/edit(id=${category.id})}"
+                         class="btn btn-sm btn-info">
+                        <i class="fe fe-edit-2"></i>
+                      </a>
+                      <a class="btn btn-sm btn-danger ms-3"
+                         th:onclick="|let result = confirm('Want to delete?');if(result){form_submit_in_table('delete-form${category.id}')}|">
+                        <i class="fe fe-trash"></i>
+                      </a>
+                      <form th:action="@{/admin/category/{id}/delete(id=${category.id})}"
+                            th:id="delete-form + ${category.id}" method="POST"
+                            style="display: none;">
+                      </form>
+                    </div>
+                  </td>
+                </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="card-footer d-flex justify-content-between" th:replace="~{admin/blocks/pagination::pagination}"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div th:replace="~{admin/blocks/scripts::scripts}"></div>
+
+</body>
+</html>

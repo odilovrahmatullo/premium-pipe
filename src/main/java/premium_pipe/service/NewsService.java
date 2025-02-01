@@ -22,7 +22,7 @@ public class NewsService {
 
     public Page<NewsResponse> getNews(@Valid RequestParams params, HttpServletRequest request) {
         Pageable pageable = PageRequest.of(params.page(),params.size());
-        Page<NewsEntity> news = newsRepository.getNewsPages(pageable);
+        Page<NewsEntity> news = newsRepository.getNewsPages(pageable,params.search());
         return news.map(n ->getOne(n,request));
     }
 

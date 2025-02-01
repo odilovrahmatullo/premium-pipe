@@ -1,5 +1,4 @@
 package premium_pipe.entity;
-
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -8,7 +7,6 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import premium_pipe.util.HashMapConverter;
 import premium_pipe.util.validator.JsonFieldConstraint;
-
 import java.time.LocalDateTime;
 import java.util.Map;
 
@@ -33,15 +31,16 @@ public class NewsEntity {
     @Column(columnDefinition = "TEXT")
     private Map<String, String> description;
 
+    @Column(name = "image")
+    private String image;
+    @Column(name = "slug",unique = true,nullable = false)
+    private String slug;
+
     @Column(name = "view_count")
-    private Long viewCount;
+    private Long viewCount = 0L;
 
     @Column(name = "created_date")
     @CreationTimestamp
     private LocalDateTime createdDate;
-
-    @Column(name = "deleted_date")
-    private LocalDateTime deletedDate;
-
 
 }

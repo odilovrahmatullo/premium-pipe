@@ -5,8 +5,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.config.annotation.web.HttpBasicDsl;
-import org.springframework.security.config.annotation.web.HttpSecurityBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -34,9 +32,11 @@ public class SpringSecurityConfig {
         http.authorizeHttpRequests(authorizationManagerRequestMatcherRegistry -> {
             authorizationManagerRequestMatcherRegistry
                     .requestMatchers(
+                            "/admin/login",
                             "/api/login/**",
                             "/api/gallery/**",
                             "/api/file/**",
+                            "/api/files/**",
                             "/api/category/**",
                             "/api/product/**",
                             "/api/news/**",
@@ -75,6 +75,8 @@ public class SpringSecurityConfig {
                                     auth.requestMatchers(
                                                     "/api/files/**",
                                                     "/admin/assets/**",
+                                                    "/admin/src/js/**",
+                                                    "/uploads/**",
                                                     "/css/**",
                                                     "/js/**",
                                                     "/admin/login",
@@ -86,7 +88,8 @@ public class SpringSecurityConfig {
                                                     "/admin/product/**",
                                                     "/admin/news/**",
                                                     "/admin/contact/**",
-                                                    "/admin/language/**"
+                                                    "/admin/language/**",
+                                                    "/admin/about/**"
                                             ).hasRole("ADMIN")
                     )
                     .formLogin(
@@ -94,7 +97,7 @@ public class SpringSecurityConfig {
                                     formLogin
                                             .loginPage("/admin/login")
                                             .loginProcessingUrl("/admin/login")
-                                            .defaultSuccessUrl("/admin/news", true)
+                                            .defaultSuccessUrl("/admin/language", true)
                                             .failureUrl("/admin/login?error=loginError"))
                     .logout((logout) -> logout.logoutSuccessUrl("/admin/login").logoutUrl("/admin/logout"))
                     .httpBasic(AbstractHttpConfigurer::disable)

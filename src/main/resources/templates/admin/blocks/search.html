@@ -1,0 +1,12 @@
+<form method="get" th:fragment="search">
+    <div class="d-flex">
+        <div class="input-group input-group-flush input-group-merge input-group-reverse"
+             style="width: 200px;">
+            <input class="form-control" name="search" type="search" placeholder="Search" th:value="${param.search}"/>
+            <span class="input-group-text">
+                                                    <i class="fe fe-search"></i>
+                                                </span>
+        </div>
+        <button class="btn btn-primary" type="submit">Search</button>
+    </div>
+</form>

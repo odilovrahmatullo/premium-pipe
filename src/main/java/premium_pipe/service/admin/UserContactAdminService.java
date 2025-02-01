@@ -11,7 +11,6 @@ import premium_pipe.mapper.UserContactMapper;
 import premium_pipe.model.request.RequestParams;
 import premium_pipe.model.response.UserContactResponse;
 import premium_pipe.repository.UserContactRepository;
-
 import java.time.LocalDateTime;
 
 @Service
@@ -29,7 +28,7 @@ public class UserContactAdminService {
     public void deleteBy(Long id) {
         UserContactEntity entity = userContactRepository
                 .getContact(id)
-                .orElseThrow(()-> new NotFoundException("Gallery not found"));
+                .orElseThrow(()-> new NotFoundException("Contact not found"));
         entity.setDeletedDate(LocalDateTime.now());
         userContactRepository.save(entity);
     }

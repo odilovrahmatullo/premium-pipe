@@ -1,5 +1,6 @@
 package premium_pipe.controller.admin;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
@@ -13,7 +14,6 @@ import premium_pipe.model.request.RequestParams;
 import premium_pipe.model.response.UserContactResponse;
 import premium_pipe.service.admin.UserContactAdminService;
 import premium_pipe.util.Paginate;
-
 import java.util.List;
 
 @Controller
@@ -22,28 +22,28 @@ import java.util.List;
 public class UserContactAdminController {
     private final UserContactAdminService userContactAdminService;
 
-    @GetMapping({"","/"})
-    public String list(final RequestParams params, final Model model){
+    @GetMapping({"", "/"})
+    public String list(final @Valid RequestParams params, final Model model) {
         Page<UserContactResponse> contactList = userContactAdminService.getContactList(params);
         int totalPages = contactList.getTotalPages();
-        List<Integer> pagination = Paginate.get_pagination(totalPages,params.page());
-        model.addAttribute("objects",contactList);
-        model.addAttribute("size",params.size());
-        model.addAttribute("page",params.page());
-        model.addAttribute("totalPages",totalPages);
-        model.addAttribute("pagination",pagination);
-
+        List<Integer> pagination = Paginate.get_pagination(totalPages, params.page());
+        model.addAttribute("objects", contactList);
+        model.addAttribute("size", params.size());
+        model.addAttribute("page", params.page());
+        model.addAttribute("totalPages", totalPages);
+        model.addAttribute("pagination", pagination);
         return "admin/contact/list";
     }
 
     @PostMapping("/{id}/delete")
-    public String delete(@PathVariable("id") Long id, RedirectAttributes redirectAttributes){
+    public String delete(@PathVariable("id") Long id, RedirectAttributes redirectAttributes) {
         try {
             userContactAdminService.deleteBy(id);
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
+            return "redirect:/admin/contact";
         }
-        catch (Exception e){
-            redirectAttributes.addFlashAttribute("errorMessage",e.getMessage());
-        }
+        redirectAttributes.addFlashAttribute("successMessage", "Successfully deleted");
         return "redirect:/admin/contact";
     }
 }
