@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.lang.reflect.Array;
 
 @Service
 @RequiredArgsConstructor
@@ -12,7 +11,6 @@ public class FileGetService {
     private final FileThumbnailService fileThumbnailService;
     @Value("${upload.url}")
     private String domainName;
-
     public String getCorrectFilePath(String path) {
         String[] pathSplit = path.split("uploads/");
         return "uploads/" + pathSplit[pathSplit.length-1];
@@ -21,7 +19,7 @@ public class FileGetService {
         if (filePath == null) return null;
         String newFilePath = getCorrectFilePath(filePath);
         if (newFilePath != null) {
-            newFilePath = domainName + "api/files/" + newFilePath;
+            newFilePath = domainName + newFilePath;
         }
         return newFilePath;
     }

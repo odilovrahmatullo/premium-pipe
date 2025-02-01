@@ -37,6 +37,7 @@ public class NewsEntity {
     private String slug;
 
     @Column(name = "view_count")
+    @Builder.Default
     private Long viewCount = 0L;
 
     @Column(name = "created_date")

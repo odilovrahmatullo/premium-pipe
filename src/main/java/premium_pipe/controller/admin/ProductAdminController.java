@@ -105,11 +105,13 @@ public class ProductAdminController {
         ProductEntity product = productAdminService.getProductEntity(id);
         List<String> images = fileSessionService.getImages(ProductEntity.class.getName(), session);
         List<CategoryAdminResponse> categories = categoryAdminService.getCategoryList();
-        String image = images != null ? images.getFirst() : fileGetService.getFileAbsoluteUrl(images.getFirst(), 300, 300);
+        String image = !images.isEmpty()
+                ? images.getFirst()
+                : fileGetService.getFileAbsoluteUrl("uploads/default-image.jpg", 300, 300);
         model.addAttribute("image", image);
         if (result.hasErrors()) {
             model.addAttribute("categories",categories);
-            model.addAttribute("requestImage", images.getFirst());
+            model.addAttribute("requestImage",image);
             model.addAttribute("dropzoneKey",ProductEntity.class.getName());
             model.addAttribute("object", par);
             model.addAttribute("image",image);

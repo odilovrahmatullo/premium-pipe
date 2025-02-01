@@ -75,7 +75,6 @@ public class FileThumbnailService {
                     .outputFormat(format)
                     .toFile(thumbFilePath);
         } catch (Exception e) {
-            log.error("Failed to create thumbnail for file {}: {}", filePath, e.getMessage(), e);
             thumbFilePath = null;
         }
         return thumbFilePath;
