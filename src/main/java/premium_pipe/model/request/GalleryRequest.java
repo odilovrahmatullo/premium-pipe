@@ -1,6 +1,10 @@
 package premium_pipe.model.request;
 
 import jakarta.validation.constraints.NotBlank;
-
-public record GalleryRequest(@NotBlank String fileId){
+import lombok.Data;
+import org.springframework.web.multipart.MultipartFile;
+@Data
+public class GalleryRequest{
+    @NotBlank private String fileId;
+    private MultipartFile file;
 }

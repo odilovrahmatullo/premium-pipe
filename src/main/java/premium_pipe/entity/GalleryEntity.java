@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import premium_pipe.enums.FileType;
+
 import java.time.LocalDateTime;
 
 @Entity
@@ -17,10 +18,10 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class GalleryEntity {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @ManyToOne
-    @JoinColumn(name = "file_id")
-    private FileEntity file;
+    @Column(name = "image")
+    private String image;
     @Enumerated(EnumType.STRING)
     @Column(name = "file_type")
     private FileType fileType;

@@ -9,8 +9,9 @@ import premium_pipe.entity.GalleryEntity;
 import java.util.Optional;
 
 public interface GalleryRepository extends CrudRepository<GalleryEntity,Long> {
-    @Query("FROM GalleryEntity where deletedDate is null ")
-    Page<GalleryEntity> getGalleries(Pageable pageable);
+    @Query("SELECT g FROM GalleryEntity g where (lower(g.fileType) like lower(concat('%',:search,'%')))  " +
+            "and g.deletedDate is null ")
+    Page<GalleryEntity> getGalleries(Pageable pageable,String search);
 
     @Query("FROM GalleryEntity where id = ?1 and deletedDate is null")
     Optional<GalleryEntity> getGallery(Long id);
