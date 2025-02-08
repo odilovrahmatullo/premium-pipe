@@ -14,5 +14,4 @@ public interface LanguageMapper {
     LanguageResponse entityToResponse(final LanguageEntity language);
     LanguageEntity responseToEntity(final LanguageRequest request);
     void updateEntity(final LanguageRequest request, @MappingTarget final LanguageEntity language);
-
 }

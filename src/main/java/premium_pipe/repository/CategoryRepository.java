@@ -12,7 +12,7 @@ import java.util.Optional;
 
 public interface CategoryRepository extends CrudRepository<CategoryEntity,Long> {
 
-    @Query("FROM CategoryEntity c where (lower(c.name) like lower(concat('%', :search, '%') )) ")
+    @Query("FROM CategoryEntity c where (lower(c.name) like lower(concat('%', :search, '%') )) order by c.createdDate desc ")
     Page<CategoryEntity> search(@Param("search") String search, Pageable pageable);
 
     @Query("FROM CategoryEntity where id = ?1")

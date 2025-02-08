@@ -24,7 +24,6 @@
                                 <h1 class="header-title text-truncate">
                                     Products
                                 </h1>
-
                             </div>
                         </div> <!-- / .row -->
                     </div>
@@ -121,20 +120,17 @@
                                             <option th:each="obj : ${categories}"
                                                     th:value="${obj.id}"
                                                     th:text="${obj.name.get(defaultLang.code)}"
-                                                    th:selected="${obj.id == categoryId}">
-                                            </option>
+                                                    th:selected="${obj.id == categoryId}"></option>
                                         </select>
                                         <div class="invalid-feedback" style="display: block;"
                                              th:if="${#fields.hasErrors('categoryId')}" th:errors="*{categoryId}"></div>
                                     </div>
                                     <!-- Project cover -->
                                     <div class="form-group">
-
                                         <!-- Label  -->
                                         <label class="form-label mb-1">
                                             Banner
                                         </label>
-
                                         <div class="dropzone dropzone-multiple border-0" data-max="1"
                                              data-delete="/api/files/delete"
                                              data-url="/api/files/upload" th:data-file-key="${dropzoneKey}">
@@ -149,7 +145,7 @@
                                                 </div>
                                             </div>
 
-                                            <!-- Preview-->
+                                            <!-- Preview -->
                                             <div class="dz-preview-container" style="padding: 0;"
                                                  id="dropzone-previews">
                                                 <div class="dz-preview dz-processing dz-complete dz-image-preview"
@@ -163,7 +159,7 @@
                                                     </div>
                                                     <a class="dz-remove"
                                                        onclick="var result = confirm('Want to delete?');if (result){submit_form('delete-form-delete-image')}"
-                                                       data-dz-remove>Delete</a>
+                                                       data-dz-remove>delete</a>
                                                     <div th:action="@{/admin/product/{id}/deleteImage(id=${id})}"
                                                          id="delete-form-delete-image" method="post"></div>
                                                 </div>
@@ -187,6 +183,7 @@
                                                     </div>
                                                 </div>
                                             </div>
+
                                         </div>
                                         <!-- Dropzone -->
                                     </div>

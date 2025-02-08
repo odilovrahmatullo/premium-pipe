@@ -1,0 +1,110 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ru" data-bs-theme="auto">
+
+<head th:replace="~{admin/blocks/header::adminHead('Galleries')}"></head>
+
+<body>
+
+<nav th:replace="~{admin/blocks/navbar::navbar}"></nav>
+
+<!-- MAIN CONTENT -->
+<div class="main-content">
+    <div th:replace="~{admin/blocks/message::message}"></div>
+    <div class="container-fluid">
+        <div class="messages"></div>
+        <div class="row justify-content-center">
+            <div class="col-12">
+                <!-- Header -->
+                <div class="header mb-0">
+                    <div class="header-body top-scroller">
+                        <div class="row align-items-center">
+                            <div class="col">
+                                <!-- Title -->
+                                <h1 class="header-title text-truncate">
+                                    Partners
+                                </h1>
+                            </div>
+                            <div class="col-auto">
+                                <!-- Buttons -->
+                                <a th:href="@{/admin/partner/create}" class="btn btn-primary ms-2">
+                                    Add Partner
+                                </a>
+
+                            </div>
+                        </div> <!-- / .row -->
+                    </div>
+                    <div class="card mt-4">
+                        <div class="card-body" style="padding: 20px;">
+                            <nav aria-label="breadcrumb">
+                                <ol class="breadcrumb">
+                                    <li class="breadcrumb-item"><a href="#">Main</a></li>
+                                    <li class="breadcrumb-item active" aria-current="page">
+                                        Partners
+                                    </li>
+                                </ol>
+                            </nav>
+                        </div>
+                    </div>
+                    <!-- Content -->
+                    <div class="card" id="contactsList">
+                        <div class="table-responsive" style="padding: 20px;">
+                            <table class="table table-sm table-hover table-nowrap card-table">
+                                <thead>
+                                <tr>
+                                    <th>
+                                        <a class="list-sort text-muted">№</a>
+                                    </th>
+                                    <th>
+                                        <a class="list-sort text-muted">File</a>
+                                    </th>
+                                    <th>
+                                        <a class="list-sort text-muted">Created date</a>
+                                    </th>
+                                    <th style="width: 200px;"></th>
+                                </tr>
+                                </thead>
+                                <tbody class="list fs-base">
+                                <tr th:each="object, index : ${partners}">
+                                    <td>
+                                        <a class="item-title" th:text="${(page) * size + index.index + 1}"/>
+                                    </td>
+                                    <td>
+                                        <div class="avatar avatar-xl align-middle me-2">
+                                            <img class="avatar-img" th:src="${object.image}" alt="..."/>
+                                        </div>
+
+                                    </td>
+                                    <td>
+                                        <p class="item-phone text-reset"
+                                           th:text="${#temporals.format(object.createdDate, 'dd-MM-yyyy HH:mm')}"/>
+                                    </td>
+                                    <td>
+                                        <div class="d-flex justify-content-end">
+                                            <a class="btn btn-sm btn-danger ms-3"
+                                               th:onclick="|let result = confirm('Want to delete?');if (result){form_submit_in_table('delete-form${object.id}')}|">
+                                                <i class="fe fe-trash"></i></a>
+                                            <form th:action="@{/admin/partner/{id}/delete (id=${object.id()})}"
+                                                  th:id="delete-form + ${object.id()}" method="POST"
+                                                  style="display: none;">
+                                            </form>
+                                        </div>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="card-footer d-flex justify-content-between"
+                             th:replace="~{admin/blocks/pagination::pagination}"></div>
+                    </div>
+                    <!-- Content End -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:replace="~{admin/blocks/scripts::scripts}"></div>
+
+</body>
+
+</html>

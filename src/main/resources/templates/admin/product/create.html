@@ -108,7 +108,15 @@
                                     </div>
                                 </div>
                             </div>
+
+                            <div class="col-12">
+                                <div class="btn-box text-end">
+                                    <button type="button" class="btn btn-primary" onclick="addProductDetailsForm()">Add Form</button>
+                                </div>
+                                <div id="productDetailsContainer"></div>
+                            </div>
                         </div>
+
 
                         <div class="col-12 col-xl-4">
                             <div class="card mt-3">
@@ -190,7 +198,61 @@
 
 <div th:replace="~{admin/blocks/scripts::scripts}"></div>
 <script th:src="@{/admin/assets/js/editor.js}"></script>
+<script>
+    let formIndex = -1;
+
+    function addProductDetailsForm() {
+        formIndex++;
+        const container = document.getElementById("productDetailsContainer");
+
+        const formHtml = `
+    <div class="card mt-3">
+        <div class="card-body p-4">
+            <h5 class="mb-3">Product Details ${formIndex+1}</h5>
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label class="form-label">Code</label>
+                        <input type="text" class="form-control" name="productDetails[${formIndex}].codeValue">
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label class="form-label">Diameter</label>
+                        <input type="text" class="form-control" name="productDetails[${formIndex}].diameterValue">
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label class="form-label">Package</label>
+                        <input type="text" class="form-control" name="productDetails[${formIndex}].packageValue">
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="form-group">
+                        <label class="form-label">Unit</label>
+                        <input type="text" class="form-control" name="productDetails[${formIndex}].unitValue">
+                    </div>
+                </div>
+                <div class="btn-box text-end">
+                    <button type="button" class="btn btn-danger mt-2" onclick="removeForm(this)">Remove</button>
+                </div>
+            </div>
+        </div>
+    </div>
+`;
+
+
+
+        container.insertAdjacentHTML('beforeend', formHtml);
+    }
+
+    function removeForm(button) {
+        button.closest('.card').remove();
+    }
+</script>
 
 </body>
+
 
 </html>

@@ -15,7 +15,6 @@ public class FileSessionService {
         List<String> sessionImages = (List<String>) session.getAttribute(fileKey);
 
         String image = null;
-
         if (sessionImages != null && !sessionImages.isEmpty()) {
             image = sessionImages.getLast();
         }
@@ -28,6 +27,9 @@ public class FileSessionService {
 
         if (images != null && !images.isEmpty()) {
             images.removeLast();
+        }
+        else{
+            return;
         }
 
         for (String image : images) {

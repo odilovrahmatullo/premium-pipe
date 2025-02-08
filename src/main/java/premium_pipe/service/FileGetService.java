@@ -19,7 +19,7 @@ public class FileGetService {
         if (filePath == null) return null;
         String newFilePath = getCorrectFilePath(filePath);
         if (newFilePath != null) {
-            newFilePath = domainName + newFilePath;
+            newFilePath = domainName + "api/files/"+newFilePath;
         }
         return newFilePath;
     }

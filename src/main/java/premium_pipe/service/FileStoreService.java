@@ -21,8 +21,6 @@ public class FileStoreService {
             fileDeleteService.deleteFile(filePath);
         }
         fileStoreRepository.deleteByExpiredAt(now);
-
-
     }
 
     public void saveFile(String filePath) {
