@@ -20,7 +20,7 @@ public class ProductInfoEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
     @JoinColumn(name = "product_id")
     private ProductEntity product;
     @Column(name = "code_value")

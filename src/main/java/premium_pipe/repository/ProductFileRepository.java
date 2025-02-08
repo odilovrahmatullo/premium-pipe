@@ -8,6 +8,6 @@ import premium_pipe.entity.ProductFileEntity;
 import java.util.List;
 
 public interface ProductFileRepository extends CrudRepository<ProductFileEntity,Long> {
-    @Query("FROM ProductFileEntity where product = ?1")
+    @Query("FROM ProductFileEntity where product = ?1 order by createdDate desc ")
     List<ProductFileEntity> getProductFIle(ProductEntity entity);
 }

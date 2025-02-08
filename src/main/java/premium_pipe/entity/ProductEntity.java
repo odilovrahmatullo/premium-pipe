@@ -35,13 +35,14 @@ public class ProductEntity {
     @Column(name = "slug")
     private String slug;
 
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
-    private List<ProductInfoEntity> infos = new ArrayList<>();
-
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
-    private List<ProductFileEntity> files = new ArrayList<>();
-
     @Column(name = "created_date")
     @CreationTimestamp
     private LocalDateTime createdDate;
+
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ProductFileEntity> files = new ArrayList<>();
+
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ProductInfoEntity> infos = new ArrayList<>();
+
 }
