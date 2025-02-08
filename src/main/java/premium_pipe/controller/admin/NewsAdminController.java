@@ -117,12 +117,15 @@ public class NewsAdminController {
                        final HttpSession session) {
         NewsEntity news = newsAdminService.getNewsEntity(id);
         String requestImage = fileSessionService.getImage(NewsEntity.class.getName(), session);
-
-        if (result.hasErrors()) {
-            setCommonAttributes(model, session, newsRequest);
-            model.addAttribute("image", requestImage != null ? requestImage : fileGetService.getFileAbsoluteUrl(news.getImage(), 300, 300));
-            return "admin/news/edit";
+        model.addAttribute("requestImage",requestImage);
+        if(requestImage!=null){
+            model.addAttribute("requestImage",requestImage);
+        }else{
+            String image = news.getImage();
+            model.addAttribute("image",fileGetService.getFileAbsoluteUrl(image,300,300));
         }
+        if (result.hasErrors())
+            return "admin/news/edit";
 
         try {
             newsAdminService.update(news, newsRequest, session);

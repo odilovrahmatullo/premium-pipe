@@ -11,7 +11,7 @@ import java.util.Optional;
 
 
 public interface NewsRepository extends CrudRepository<NewsEntity,Long> {
-    @Query("SELECT n FROM NewsEntity n where lower(n.title) like lower(concat('%',:search,'%'))")
+    @Query("SELECT n FROM NewsEntity n where lower(n.title) like lower(concat('%',:search,'%')) order by n.createdDate desc ")
     Page<NewsEntity> getNewsPages(Pageable pageable,@Param("search") String search);
 
     @Query("FROM NewsEntity where id = ?1")

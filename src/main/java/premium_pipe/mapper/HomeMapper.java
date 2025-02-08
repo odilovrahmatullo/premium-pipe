@@ -11,6 +11,5 @@ import premium_pipe.model.response.admin.HomeAdminResponse;
 public interface HomeMapper {
     HomeEntity toEntity(HomeRequest homeRequest);
     HomeAdminResponse toDTO(HomeEntity homeEntity);
-
     void update(HomeRequest request,@MappingTarget HomeEntity home);
 }
