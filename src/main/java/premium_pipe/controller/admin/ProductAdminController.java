@@ -11,7 +11,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import premium_pipe.entity.LanguageEntity;
-import premium_pipe.entity.NewsEntity;
 import premium_pipe.entity.ProductEntity;
 import premium_pipe.model.request.ProductAdminRequest;
 import premium_pipe.model.request.RequestParams;
@@ -24,6 +23,7 @@ import premium_pipe.service.LanguageService;
 import premium_pipe.service.ProductFileService;
 import premium_pipe.service.admin.CategoryAdminService;
 import premium_pipe.service.admin.ProductAdminService;
+import premium_pipe.service.admin.ProductInfoAdminService;
 import premium_pipe.util.Paginate;
 
 import java.util.List;
@@ -38,11 +38,13 @@ public class ProductAdminController {
     private final FileSessionService fileSessionService;
     private final CategoryAdminService categoryAdminService;
     private final FileGetService fileGetService;
+    private final ProductFileService productFileService;
+    private final ProductInfoAdminService productInfoAdminService;
 
     @GetMapping("/create")
     public String createProduct(final Model model) {
         ProductAdminRequest productAdminRequest = new ProductAdminRequest();
-        setCommonAttributes(model,null,productAdminRequest);
+        setCommonAttributes(model, null, productAdminRequest);
         return "admin/product/create";
     }
 
@@ -52,15 +54,14 @@ public class ProductAdminController {
                          final RedirectAttributes redirectAttributes,
                          final Model model,
                          final HttpSession session) {
-        setCommonAttributes(model,session,adminRequest);
         if (bindingResult.hasErrors()) {
-            setCommonAttributes(model,session,adminRequest);
+            setCommonAttributes(model, session, adminRequest);
             return "admin/product/create";
         }
         try {
             productAdminService.createProduct(adminRequest, session);
         } catch (Exception exception) {
-            setCommonAttributes(model,session,adminRequest);
+            setCommonAttributes(model, session, adminRequest);
             redirectAttributes.addFlashAttribute("errorMessage", exception.getMessage());
         }
         redirectAttributes.addFlashAttribute("successMessage", "SUCCESS");
@@ -84,11 +85,13 @@ public class ProductAdminController {
 
     @GetMapping("/{id}/edit")
     public String one(@PathVariable("id") final Long id, final Model model) {
-        ProductEntity product  = productAdminService.getProductEntity(id);
+        ProductEntity product = productAdminService.getProductEntity(id);
         ProductAdminResponse par = productAdminService.getByEntity(product);
-        setCommonAttributes(model,null,null);
-        model.addAttribute("object",par);
-        model.addAttribute("categoryId",par.getCategoryId());
+        List<String> images = productFileService.getProductFiles(product);
+        model.addAttribute("image", images.getFirst());
+        setCommonAttributes(model, null, null);
+        model.addAttribute("object", par);
+        model.addAttribute("categoryId", par.getCategoryId());
         model.addAttribute("id", id);
         return "admin/product/edit";
     }
@@ -103,30 +106,16 @@ public class ProductAdminController {
         LanguageEntity language = languageService.findDefault();
         List<LanguageResponse> languages = languageService.getActives();
         ProductEntity product = productAdminService.getProductEntity(id);
-        List<String> images = fileSessionService.getImages(ProductEntity.class.getName(), session);
-        List<CategoryAdminResponse> categories = categoryAdminService.getCategoryList();
-        String image = !images.isEmpty()
-                ? images.getFirst()
-                : fileGetService.getFileAbsoluteUrl("uploads/default-image.jpg", 300, 300);
-        model.addAttribute("image", image);
         if (result.hasErrors()) {
-            model.addAttribute("categories",categories);
-            model.addAttribute("requestImage",image);
-            model.addAttribute("dropzoneKey",ProductEntity.class.getName());
-            model.addAttribute("object", par);
-            model.addAttribute("image",image);
-            model.addAttribute("defaultLang", language);
-            model.addAttribute("categoryId",par.getCategoryId());
-            model.addAttribute("languages", languages);
+            setCommonAttributes(model,session,par);
+            model.addAttribute("categoryId", par.getCategoryId());
             return "admin/product/edit";
         }
         try {
             productAdminService.update(product, par, session);
         } catch (Exception e) {
-            setCommonAttributes(model,session,par);
-            model.addAttribute("categories",categories);
-            model.addAttribute("images",images);
-            model.addAttribute("categoryId",par.getCategoryId());
+            setCommonAttributes(model, session, par);
+            model.addAttribute("categoryId", par.getCategoryId());
             return "admin/product/edit";
         }
         redirectAttributes.addFlashAttribute("successMessage", "Successfully Updated");
@@ -162,11 +151,13 @@ public class ProductAdminController {
         List<CategoryAdminResponse> categories = categoryAdminService.getCategoryList();
         if (session != null) {
             List<String> images = fileSessionService.getImages(dropzoneKey, session);
-            model.addAttribute("requestImage", images);
+            if(images!=null && !images.isEmpty()) {
+                model.addAttribute("requestImage", images);
+            }
         }
         model.addAttribute("object", par);
         model.addAttribute("categories", categories);
-        model.addAttribute("defaultLang",defaultLang);
+        model.addAttribute("defaultLang", defaultLang);
         model.addAttribute("dropzoneKey", dropzoneKey);
         model.addAttribute("languages", languages);
     }

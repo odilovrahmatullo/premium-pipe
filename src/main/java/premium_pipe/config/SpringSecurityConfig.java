@@ -89,7 +89,8 @@ public class SpringSecurityConfig {
                                                     "/admin/news/**",
                                                     "/admin/contact/**",
                                                     "/admin/language/**",
-                                                    "/admin/about/**"
+                                                    "/admin/about/**",
+                                                    "/admin/partner/**"
                                             ).hasRole("ADMIN")
                     )
                     .formLogin(

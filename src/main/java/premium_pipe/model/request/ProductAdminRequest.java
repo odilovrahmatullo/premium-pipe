@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import premium_pipe.util.validator.JsonFieldConstraint;
+
+import java.util.List;
 import java.util.Map;
 
 @Data
@@ -19,6 +21,8 @@ public class ProductAdminRequest {
     @NotNull
     @JsonFieldConstraint
     private Map<String, String> description;
-    @NotNull
+    @NotNull(message = "This field is required")
     private Long categoryId;
+
+    private List<ProductInfoRequest> productDetails;
 }

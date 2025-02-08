@@ -5,21 +5,27 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import premium_pipe.util.validator.JsonFieldConstraint;
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class ProductInfoRequest {
-    @NotNull(message = "Code value is required")
+
+    @NotNull
+    @JsonFieldConstraint
     private Integer codeValue;
 
-    @NotNull(message = "Diameter value is required")
+    @NotNull
+    @JsonFieldConstraint
     private String diameterValue;
 
-    @NotNull(message = "Package value is required")
+    @NotNull
+    @JsonFieldConstraint
     private String packageValue;
 
-    @NotNull(message = "Unit value is required")
+    @NotNull
+    @JsonFieldConstraint
     private String unitValue;
 }

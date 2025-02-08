@@ -12,12 +12,12 @@ import java.util.Optional;
 
 public interface ProductRepository extends CrudRepository<ProductEntity,Long> {
 
-    @Query("FROM ProductEntity p where (lower(p.name) like lower(concat('%',:search,'%') ) )")
+    @Query("FROM ProductEntity p where (lower(p.name) like lower(concat('%',:search,'%') ) ) order by p.id desc ")
     Page<ProductEntity> getProducts(String search,Pageable pageable);
 
     @Query("FROM ProductEntity where id = ?1")
     Optional<ProductEntity> getById(Long id);
 
-    @Query("FROM ProductEntity p where (lower(p.name) like lower(concat('%',:search,'%') ) ) and p.category = :category")
+    @Query("FROM ProductEntity p where (lower(p.name) like lower(concat('%',:search,'%') ) ) and p.category = :category order by p.id desc ")
     Page<ProductEntity> getProductsByCategory(@Param("search") String search, Pageable pageable,@Param("category") CategoryEntity category);
 }

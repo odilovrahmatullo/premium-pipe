@@ -1,7 +1,7 @@
 package premium_pipe.service.admin;
 
 import jakarta.servlet.http.HttpSession;
-import jakarta.validation.Valid;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -29,7 +29,9 @@ public class ProductAdminService {
     private final ProductMapper productMapper;
     private final FileSessionService fileSessionService;
     private final FileDeleteService fileDeleteService;
+    private final ProductInfoAdminService productInfoAdminService;
 
+    @Transactional
     public void createProduct(final ProductAdminRequest product, HttpSession session) {
         String dropzoneKey = ProductEntity.class.getName();
         List<String> imagesPath = fileSessionService.getImages(dropzoneKey, session);
@@ -38,6 +40,9 @@ public class ProductAdminService {
         productEntity.setCategory(category);
         productRepository.save(productEntity);
         productFileService.create(productEntity, imagesPath);
+        if(product.getProductDetails() != null && !product.getProductDetails().isEmpty()) {
+            productInfoAdminService.create(productEntity, product.getProductDetails());
+        }
         fileSessionService.deleteFilesFromSession(dropzoneKey,session);
     }
 
@@ -81,18 +86,16 @@ public class ProductAdminService {
         ProductEntity updatedProduct = productMapper.update(par,product);
         updatedProduct.setCategory(category);
         productRepository.save(updatedProduct);
+        productFileService.deleteProductFiles(updatedProduct);
         productFileService.create(updatedProduct,images);
         fileSessionService.deleteFilesFromSession(dropzoneKey,session);
     }
-
     public void deleteImage(Long id) {
         ProductEntity product = getProductEntity(id);
         List<String> deletedImages = productFileService.getProductFiles(product);
         for(String deletedImage : deletedImages){
         fileDeleteService.deleteFile(deletedImage);
         }
-        productFileService.create(product,deletedImages);
-
     }
 }
 

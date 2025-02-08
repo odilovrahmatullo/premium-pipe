@@ -7,6 +7,5 @@ import premium_pipe.model.response.UserContactResponse;
 
 @Mapper(componentModel = "spring", unmappedSourcePolicy = ReportingPolicy.IGNORE,unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface UserContactMapper {
-
     UserContactResponse toDTO(UserContactEntity entity);
 }
