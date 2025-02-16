@@ -39,6 +39,9 @@
                 <tr>
                   <th>№</th>
                   <th>Category Name</th>
+                  <th>
+                    <a class="list-sort text-muted">File</a>
+                  </th>
                   <th>Created Date</th>
                   <th></th>
                 </tr>
@@ -48,6 +51,12 @@
                   <td th:text="${index.count}"></td>
                   <td>
                     <p class="item-phone text-reset" th:text="${category.name.get(defaultLang.code)}"></p>
+                  </td>
+                  <td>
+                    <div class="avatar avatar-xl align-middle me-2">
+                      <img class="avatar-img" th:src="${category.image}" alt="..."/>
+                    </div>
+
                   </td>
                   <td th:text="${#temporals.format(category.createdDate, 'dd-MM-yyyy')}"></td>
                   <td>

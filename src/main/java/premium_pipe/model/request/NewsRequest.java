@@ -17,7 +17,5 @@ public class NewsRequest {
     @NotNull
     @JsonFieldConstraint
     private Map<String, String> title;
-    @NotNull
-    @JsonFieldConstraint
     private Map<String, String> description;
 }

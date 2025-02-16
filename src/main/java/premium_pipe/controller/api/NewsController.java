@@ -19,6 +19,7 @@ import premium_pipe.service.NewsService;
 @RequiredArgsConstructor
 public class NewsController {
     private final NewsService newsService;
+
     @GetMapping
     public ResponseEntity<Page<NewsResponse>> list(@Valid final RequestParams params, final HttpServletRequest request){
         try {
@@ -29,11 +30,11 @@ public class NewsController {
         }
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<NewsResponse> one(@PathVariable("id") final Long id,
+    @GetMapping("/{slug}")
+    public ResponseEntity<NewsResponse> one(@PathVariable("slug") final String slug,
                                             final HttpServletRequest request){
         try{
-            return ResponseEntity.ok(newsService.getOne(newsService.getNewsEntity(id),request));
+            return ResponseEntity.ok(newsService.getNewsBySlug(slug,request));
         }
         catch (Exception e){
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();

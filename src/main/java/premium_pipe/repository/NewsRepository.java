@@ -7,6 +7,7 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 import premium_pipe.entity.NewsEntity;
 
+import java.util.List;
 import java.util.Optional;
 
 
@@ -15,9 +16,15 @@ public interface NewsRepository extends CrudRepository<NewsEntity,Long> {
     Page<NewsEntity> getNewsPages(Pageable pageable,@Param("search") String search);
 
     @Query("FROM NewsEntity where id = ?1")
-    Optional<NewsEntity> getNews(Long id);
+    Optional<NewsEntity> getNews(final Long id);
 
     Boolean existsBySlug(final String slug);
 
     Boolean existsBySlugAndIdNot(final String slug,final Long id);
+
+    @Query("FROM NewsEntity where slug = ?1")
+    Optional<NewsEntity> getBySlug(final String slug);
+
+    @Query("FROM NewsEntity where id != ?1")
+    List<NewsEntity> getNewsExceptThat(final Long id);
 }

@@ -26,6 +26,7 @@ import premium_pipe.service.admin.ProductAdminService;
 import premium_pipe.service.admin.ProductInfoAdminService;
 import premium_pipe.util.Paginate;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -37,9 +38,7 @@ public class ProductAdminController {
     private final LanguageService languageService;
     private final FileSessionService fileSessionService;
     private final CategoryAdminService categoryAdminService;
-    private final FileGetService fileGetService;
     private final ProductFileService productFileService;
-    private final ProductInfoAdminService productInfoAdminService;
 
     @GetMapping("/create")
     public String createProduct(final Model model) {
@@ -149,17 +148,14 @@ public class ProductAdminController {
         String dropzoneKey = ProductEntity.class.getName();
         LanguageEntity defaultLang = languageService.findDefault();
         List<CategoryAdminResponse> categories = categoryAdminService.getCategoryList();
-        if (session != null) {
-            List<String> images = fileSessionService.getImages(dropzoneKey, session);
-            if(images!=null && !images.isEmpty()) {
-                model.addAttribute("requestImage", images);
-            }
-        }
+        List<String> images = (session != null) ? fileSessionService.getImages(dropzoneKey, session) : new ArrayList<>();
+        model.addAttribute("requestImage", images);
         model.addAttribute("object", par);
         model.addAttribute("categories", categories);
         model.addAttribute("defaultLang", defaultLang);
         model.addAttribute("dropzoneKey", dropzoneKey);
         model.addAttribute("languages", languages);
     }
+
 }
 

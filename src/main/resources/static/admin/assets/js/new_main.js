@@ -70,12 +70,12 @@ $('.dropzone').each((i, e) => {
         url: $(e).attr("data-url"),
         parallelUploads: 1,
         acceptedFiles: accept,
-        maxFilesize: 2,
+        maxFilesize: 10,
         maxFiles: $(e).attr('data-max'),
         params: params,
         previewsContainer: `#${$(e).find('.dz-preview-container').attr('id')}`,
         success: (file, response) => {
-            var removeButton = Dropzone.createElement(`<a class="dz-remove" data-dz-remove>Удалить</a>`);
+            var removeButton = Dropzone.createElement(`<a class="dz-remove" data-dz-remove>Delete</a>`);
             removeButton.addEventListener("click", function (ev) {
                 ev.preventDefault();
                 ev.stopPropagation();

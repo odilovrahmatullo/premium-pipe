@@ -12,6 +12,7 @@ import premium_pipe.mapper.PartnerMapper;
 import premium_pipe.model.request.RequestParams;
 import premium_pipe.model.response.PartnerResponse;
 import premium_pipe.repository.PartnerRepository;
+import premium_pipe.service.FileGetService;
 import premium_pipe.service.FileSessionService;
 
 @Service
@@ -20,15 +21,13 @@ public class PartnerAdminService {
     private final PartnerRepository partnerRepository;
     private final FileSessionService fileSessionService;
     private final PartnerMapper partnerMapper;
+    private final FileGetService fileGetService;
 
     public void create(HttpSession session) {
         String dropzoneKey = PartnerEntity.class.getName();
         String imagePath = fileSessionService.getImage(dropzoneKey,session);
-        int index = imagePath.lastIndexOf("uploads");
-        String relativePath = imagePath.substring(index-1);
-        relativePath = relativePath.replace('\\', '/');
         PartnerEntity partner = PartnerEntity.builder()
-                .image(relativePath)
+                .image(fileGetService.normalization(imagePath))
                 .build();
         partnerRepository.save(partner);
     }

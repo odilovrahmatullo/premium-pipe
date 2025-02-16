@@ -1,8 +1,7 @@
 <!doctype html>
-<html xmlns:th="http://www.thymeleaf.org" lang="ru" data-bs-theme="auto">
+<html xmlns:th="http://www.thymeleaf.org" lang="en" data-bs-theme="auto">
 
-<head th:replace="~{admin/blocks/header::adminHead('News')}"></head>
-
+<head th:replace="~{admin/blocks/header::adminHead('Banners')}"></head>
 
 <body>
 
@@ -22,16 +21,13 @@
               <div class="col">
                 <!-- Title -->
                 <h1 class="header-title text-truncate">
-                  News
+                  Banners
                 </h1>
-
               </div>
               <div class="col-auto">
-                <!-- Navigation (button group) -->
-
                 <!-- Buttons -->
-                <a th:href="@{/admin/news/create}" class="btn btn-primary ms-2">
-                  Add News
+                <a th:href="@{/admin/banner/create}" class="btn btn-primary ms-2">
+                  Add Banner
                 </a>
 
               </div>
@@ -41,9 +37,9 @@
             <div class="card-body" style="padding: 20px;">
               <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
-                  <li class="breadcrumb-item"><a th:href="@{admin/news}">Main</a></li>
+                  <li class="breadcrumb-item"><a href="#">Main</a></li>
                   <li class="breadcrumb-item active" aria-current="page">
-                    News
+                    Banners
                   </li>
                 </ol>
               </nav>
@@ -51,14 +47,6 @@
           </div>
           <!-- Content -->
           <div class="card" id="contactsList">
-            <div class="card-header">
-              <div class="row align-items-center">
-                <div class="col">
-                  <!-- Form -->
-                  <form th:replace="~{admin/blocks/search::search}"></form>
-                </div>
-              </div> <!-- / .row -->
-            </div>
             <div class="table-responsive" style="padding: 20px;">
               <table class="table table-sm table-hover table-nowrap card-table">
                 <thead>
@@ -67,16 +55,13 @@
                     <a class="list-sort text-muted">№</a>
                   </th>
                   <th>
-                    <a class="list-sort text-muted">Photo</a>
+                    <a class="list-sort text-muted">Banner</a>
                   </th>
                   <th>
                     <a class="list-sort text-muted">Title</a>
                   </th>
                   <th>
-                    <a class="list-sort text-muted">View Count</a>
-                  </th>
-                  <th>
-                    <a class="list-sort text-muted">CreatedDate</a>
+                    <a class="list-sort text-muted">Created date</a>
                   </th>
                   <th style="width: 200px;"></th>
                 </tr>
@@ -84,18 +69,15 @@
                 <tbody class="list fs-base">
                 <tr th:each="object, index : ${objects}">
                   <td>
-                    <a class="item-title" th:text="${(page) * size + index.index + 1}" />
+                    <a class="item-title" th:text="${(page) * size + index.index + 1}"/>
                   </td>
                   <td>
                     <div class="avatar avatar-xl align-middle me-2">
-                      <img class="avatar-img" th:src="${object.getImage()}" alt="..." />
+                      <img class="avatar-img" th:src="${object.getImage()}" alt="..."/>
                     </div>
                   </td>
                   <td>
-                    <p class="item-phone text-reset" th:text="${object.getTitle().get(defaultLang.getCode())}" />
-                  </td>
-                  <td>
-                    <p class="item-phone text-reset" th:text="${object.getViewCount()}" />
+                    <p class="item-email text-reset" th:text="${object.getTitle().get(defaultLang.getCode())}"></p>
                   </td>
                   <td>
                     <p class="item-phone text-reset"
@@ -103,15 +85,13 @@
                   </td>
                   <td>
                     <div class="d-flex justify-content-end">
-                      <a th:href="@{/admin/news/{id}/edit(id=${object.getId()})}"
-                         class="btn btn-sm btn-info">
-                        <i class="fe fe-edit-2"></i>
-                      </a>
                       <a class="btn btn-sm btn-danger ms-3"
-                         th:onclick="|let result = confirm('Want to delete?'); if(result){form_submit_in_table('delete-form${object.getId()}')}|">
+                         th:onclick="|let result = confirm('Want to delete?');if (result){form_submit_in_table('delete-form${object.id}')}|">
                         <i class="fe fe-trash"></i></a>
-                      <form th:action="@{/admin/news/{id}/delete(id=${object.getId()})}"
-                            th:id="delete-form + ${object.getId()}" method="POST" style="display: none;">
+
+                      <form th:action="@{/admin/banner/{id}/delete(id=${object.getId()})}"
+                            th:id="delete-form + ${object.getId()}" method="POST"
+                            style="display: none;">
                       </form>
                     </div>
                   </td>
@@ -119,7 +99,8 @@
                 </tbody>
               </table>
             </div>
-            <div class="card-footer d-flex justify-content-between" th:replace="~{admin/blocks/pagination::pagination}"></div>
+            <div class="card-footer d-flex justify-content-between"
+                 th:replace="~{admin/blocks/pagination::pagination}"></div>
           </div>
           <!-- Content End -->
         </div>

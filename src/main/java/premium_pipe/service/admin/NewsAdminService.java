@@ -14,6 +14,7 @@ import premium_pipe.model.request.RequestParams;
 import premium_pipe.model.response.admin.NewsAdminResponse;
 import premium_pipe.repository.NewsRepository;
 import premium_pipe.service.FileDeleteService;
+import premium_pipe.service.FileGetService;
 import premium_pipe.service.FileSessionService;
 import premium_pipe.service.NewsSlugService;
 
@@ -25,6 +26,7 @@ public class NewsAdminService {
     private final NewsMapper newsMapper;
     private final NewsSlugService newsSlugService;
     private final FileDeleteService fileDeleteService;
+    private final FileGetService fileGetService;
 
     public void create(NewsRequest newsRequest, HttpSession session) {
         String dropzoneKey = NewsEntity.class.getName();
@@ -32,7 +34,7 @@ public class NewsAdminService {
         NewsEntity news = newsMapper.toEntity(newsRequest);
         String slug = newsSlugService.generateSlug(news.getTitle());
         news.setSlug(slug);
-        news.setImage(image(imagePath));
+        news.setImage(fileGetService.normalization(imagePath));
         newsRepository.save(news);
         fileSessionService.deleteFilesFromSession(dropzoneKey, session);
     }
@@ -65,16 +67,10 @@ public class NewsAdminService {
         String slug = newsSlugService.generateSlug(id, news.getTitle());
         news.setSlug(slug);
         if (imagePath != null) {
-            news.setImage(image(imagePath));
+            news.setImage(fileGetService.normalization(imagePath));
         }
         newsRepository.save(news);
         fileSessionService.deleteFilesFromSession(dropzoneKey, session);
-    }
-
-    private String image(String path) {
-        int index = path.lastIndexOf("uploads");
-        String relativePath = path.substring(index - 1);
-        return relativePath.replace('\\', '/' );
     }
 
     public void deleteImage(Long id) {

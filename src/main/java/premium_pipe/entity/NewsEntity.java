@@ -38,7 +38,7 @@ public class NewsEntity {
 
     @Column(name = "view_count")
     @Builder.Default
-    private Long viewCount = 0L;
+    private Long viewCount = 1L;
 
     @Column(name = "created_date")
     @CreationTimestamp

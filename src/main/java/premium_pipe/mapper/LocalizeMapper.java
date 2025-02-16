@@ -16,7 +16,7 @@ public class LocalizeMapper {
     public String translate(final Map<String, String> value, final HttpServletRequest request) {
         if (value == null) return null;
 
-        String language = request.getHeader("Language");
+        String language = request.getHeader("Accept-Language");
 
         LanguageEntity defaultLanguage = languageService.findDefault();
 

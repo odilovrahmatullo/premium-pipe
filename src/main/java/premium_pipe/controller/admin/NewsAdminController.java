@@ -64,7 +64,11 @@ public class NewsAdminController {
                              final HttpSession session,
                              final RedirectAttributes redirectAttributes) {
         if (result.hasErrors()) {
-            setCommonAttributes(model, session, newsRequest);
+            setCommonAttributes(model, null, newsRequest);
+            String image = fileSessionService.getImage(NewsEntity.class.getName(),session);
+            if(image!=null) {
+                model.addAttribute("requestImage", fileGetService.normalization(image));
+            }
             return "admin/news/create";
         }
 
