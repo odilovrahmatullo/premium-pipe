@@ -26,6 +26,11 @@ public class CategoryEntity {
         @Convert(converter = HashMapConverter.class)
         @JsonFieldConstraint
         private Map<String, String> name;
+        private String image;
+        private String slug;
         @CreationTimestamp
+        @Column(name = "created_date")
         private LocalDateTime createdDate;
+        @Column(name = "deleted_date")
+        private LocalDateTime deletedDate;
 }

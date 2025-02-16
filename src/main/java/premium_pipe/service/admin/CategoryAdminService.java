@@ -1,17 +1,22 @@
 package premium_pipe.service.admin;
 
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import premium_pipe.entity.CategoryEntity;
+import premium_pipe.entity.GalleryEntity;
 import premium_pipe.exception.NotFoundException;
 import premium_pipe.mapper.CategoryMapper;
 import premium_pipe.model.request.CategoryRequest;
 import premium_pipe.model.request.RequestParams;
 import premium_pipe.model.response.admin.CategoryAdminResponse;
 import premium_pipe.repository.CategoryRepository;
+import premium_pipe.service.CategorySlugService;
+import premium_pipe.service.FileGetService;
+import premium_pipe.service.FileSessionService;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -21,10 +26,19 @@ import java.util.List;
 public class CategoryAdminService {
     private final CategoryRepository categoryRepository;
     private final CategoryMapper categoryMapper;
-    public void create(final CategoryRequest categoryRequest){
+    private final FileSessionService fileSessionService;
+    private final CategorySlugService categorySlugService;
+    private final FileGetService fileGetService;
+
+    public void create(final CategoryRequest categoryRequest, HttpSession session){
+        String dropzoneKey = CategoryEntity.class.getName();
+        String imagePath = fileSessionService.getImage(dropzoneKey,session);
+        String slug = categorySlugService.generateSlug(categoryRequest.getName());
         CategoryEntity category = CategoryEntity
                 .builder()
+                .image(fileGetService.normalization(imagePath))
                 .name(categoryRequest.getName())
+                .slug(slug)
                 .build();
         categoryRepository.save(category);
     }
@@ -51,9 +65,11 @@ public class CategoryAdminService {
                 () -> new NotFoundException("Category Not Found "));
     }
 
+
     public void delete(Long id) {
         CategoryEntity category = getCategoryEntity(id);
-        categoryRepository.delete(category);
+        category.setDeletedDate(LocalDateTime.now());
+        categoryRepository.save(category);
     }
 
     public List<CategoryAdminResponse> getCategoryList() {

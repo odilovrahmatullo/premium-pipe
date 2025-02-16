@@ -12,12 +12,20 @@ import java.util.Optional;
 
 public interface CategoryRepository extends CrudRepository<CategoryEntity,Long> {
 
-    @Query("FROM CategoryEntity c where (lower(c.name) like lower(concat('%', :search, '%') )) order by c.createdDate desc ")
+    @Query("FROM CategoryEntity c where c.deletedDate is null and (lower(c.name) like lower(concat('%', :search, '%') )) order by c.createdDate desc ")
     Page<CategoryEntity> search(@Param("search") String search, Pageable pageable);
 
-    @Query("FROM CategoryEntity where id = ?1")
+    @Query("FROM CategoryEntity where id = ?1 and deletedDate is null")
     Optional<CategoryEntity> getCategory(Long id);
 
-    @Query("FROM CategoryEntity ")
+    @Query("FROM CategoryEntity where deletedDate is null")
     List<CategoryEntity> getList();
+
+    Boolean existsBySlug(String slug);
+
+
+    Boolean existsBySlugAndIdNot(String slug, Long id);
+
+    Optional<CategoryEntity> findBySlug(String slug);
+
 }

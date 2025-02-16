@@ -1,5 +1,6 @@
 package premium_pipe.controller.admin;
 
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -9,12 +10,14 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import premium_pipe.entity.CategoryEntity;
+import premium_pipe.entity.GalleryEntity;
 import premium_pipe.entity.LanguageEntity;
 import premium_pipe.model.request.CategoryRequest;
 import premium_pipe.model.request.RequestParams;
 import premium_pipe.model.response.LanguageResponse;
 import premium_pipe.model.response.admin.CategoryAdminResponse;
 import premium_pipe.model.response.admin.ProductAdminResponse;
+import premium_pipe.service.FileSessionService;
 import premium_pipe.service.LanguageService;
 import premium_pipe.service.admin.CategoryAdminService;
 import premium_pipe.service.admin.ProductAdminService;
@@ -29,6 +32,7 @@ public class CategoryAdminController {
     private final CategoryAdminService categoryAdminService;
     private final LanguageService languageService;
     private final ProductAdminService productAdminService;
+    private final FileSessionService fileSessionService;
 
     @GetMapping("/create")
     public String createCategory(final Model model){
@@ -38,20 +42,25 @@ public class CategoryAdminController {
         model.addAttribute("object",categoryRequest);
         model.addAttribute("languages",languages);
         model.addAttribute("defaultLang",language);
-
+        model.addAttribute("dropzoneKey",CategoryEntity.class.getName());
         return "admin/category/create";
     }
 
     @PostMapping("/create")
     public String create(@Valid @ModelAttribute("object") final CategoryRequest category,
-                                       final BindingResult result,
-                                       final Model model){
+                         final BindingResult result,
+                         final Model model,
+                         final HttpSession session){
+        String dropzoneKey = CategoryEntity.class.getName();
+        String image = fileSessionService.getImage(dropzoneKey,session);
+        model.addAttribute("requestImage", image);
         if(result.hasErrors()) {
+            model.addAttribute("requestImage",image);
             model.addAttribute("object",category);
             return "admin/category/create";
         }
         try{
-            categoryAdminService.create(category);
+            categoryAdminService.create(category,session);
         }
         catch (Exception e){
             model.addAttribute("object",category);
