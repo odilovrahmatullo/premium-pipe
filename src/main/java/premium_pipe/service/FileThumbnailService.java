@@ -1,17 +1,18 @@
 package premium_pipe.service;
 
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Paths;
+import java.util.Arrays;
+import java.util.Map;
+import javax.imageio.ImageIO;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import net.coobird.thumbnailator.Thumbnails;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.stereotype.Service;
 import premium_pipe.exception.BaseException;
 
-import java.io.File;
-import java.util.Arrays;
-import java.util.Map;
-
-@Slf4j
 @Service
 @RequiredArgsConstructor
 public class FileThumbnailService {
@@ -28,21 +29,6 @@ public class FileThumbnailService {
         return mainFolderPath + folderPath;
     }
 
-
-    public String getThumbnailImage(String filePath, int width, int height, String format) {
-        String thumbFilePath = getThumbFilePath(filePath, String.format("%dx%d", width, height), format);
-
-        thumbFilePath = Arrays.stream(thumbFilePath.split("/uploads/")).toList().getLast();
-
-        boolean fileExists = new File("uploads/", thumbFilePath).exists();
-
-        if (!fileExists) {
-            thumbFilePath = generateThumbnailImage(filePath, width, height, format);
-        }
-
-        return thumbFilePath == null ? "" : thumbFilePath;
-    }
-
     public String getThumbFilePath(final String filePath, final String size, final String format) {
         String fileExt = "." + FilenameUtils.getExtension(filePath);
         String fileName = FilenameUtils.getName(filePath).replace(fileExt, "");
@@ -51,6 +37,24 @@ public class FileThumbnailService {
 
         return String.format("%s.%s.%s", path, size, format);
     }
+
+
+    public String getThumbnailImage(final String filePath, final int width, final int height, final String format) {
+        // OS-ga mos yo‘lni olish
+        String thumbFilePath = getThumbFilePath(filePath, String.format("%dx%d", width, height), format);
+
+        // **OS mustaqil yo‘lni olish**
+        String normalizedThumbFilePath = Paths.get(thumbFilePath).normalize().toString();
+
+        boolean fileExists = new File(normalizedThumbFilePath).exists();
+
+        if (!fileExists) {
+            normalizedThumbFilePath = generateThumbnailImage(filePath, width, height, format);
+        }
+
+        return normalizedThumbFilePath == null ? "" : normalizedThumbFilePath;
+    }
+
 
     public String generateThumbnailImage(
             final String filePath, final int width, final int height, final String format) {
@@ -65,18 +69,23 @@ public class FileThumbnailService {
             boolean folderCreated = dir.mkdirs();
 
             if (!folderCreated) {
-                log.error("Failed to create directory: {}", folderPath);
                 throw new BaseException(Map.of("error", "Folder cannot be created"), 403);
             }
         }
+
         try {
-            Thumbnails.of(filePath)
-                    .size(width, height)
-                    .outputFormat(format)
-                    .toFile(thumbFilePath);
+            Thumbnails.of(filePath).size(width, height).outputFormat(format).toFile(thumbFilePath);
         } catch (Exception e) {
             thumbFilePath = null;
         }
+
         return thumbFilePath;
+    }
+
+    public void saveThumbnailAsWebp(final BufferedImage bufferedImage, final String savePath)
+            throws IOException {
+        File outputFile = new File(FilenameUtils.getName(savePath));
+
+        ImageIO.write(bufferedImage, "webp", outputFile);
     }
 }

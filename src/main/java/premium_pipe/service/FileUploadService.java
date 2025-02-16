@@ -25,7 +25,6 @@ public class FileUploadService {
     public String saveFromApi(MultipartFile file, boolean save) throws IOException {
         fileStoreService.deleteExpiredFiles();
         String filePath = saveFile(file);
-
         if(!save)
             fileStoreService.saveFile(filePath);
         return filePath;

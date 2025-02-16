@@ -9,10 +9,11 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+
 public class FileSessionService {
     private final FileDeleteService fileDeleteService;
     public String getImage(final String fileKey, final HttpSession session) {
-        List<String> sessionImages = (List<String>) session.getAttribute(fileKey);
+        List<String> sessionImages = (List<String>)session.getAttribute(fileKey);
 
         String image = null;
         if (sessionImages != null && !sessionImages.isEmpty()) {

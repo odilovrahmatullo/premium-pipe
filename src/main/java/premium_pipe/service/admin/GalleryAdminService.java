@@ -12,6 +12,7 @@ import premium_pipe.mapper.GalleryMapper;
 import premium_pipe.model.request.RequestParams;
 import premium_pipe.model.response.GalleryResponse;
 import premium_pipe.repository.GalleryRepository;
+import premium_pipe.service.FileGetService;
 import premium_pipe.service.FileSessionService;
 import premium_pipe.service.FileUploadService;
 
@@ -24,15 +25,13 @@ public class GalleryAdminService {
     private final GalleryMapper galleryMapper;
     private final FileSessionService fileSessionService;
     private final FileUploadService fileUploadService;
+    private final FileGetService fileGetService;
 
     public void create(final HttpSession session) {
         String dropzoneKey = GalleryEntity.class.getName();
         String imagePath = fileSessionService.getImage(dropzoneKey,session);
-        int index = imagePath.lastIndexOf("uploads");
-        String relativePath = imagePath.substring(index-1);
-        relativePath = relativePath.replace('\\', '/');
         GalleryEntity gallery = GalleryEntity.builder()
-                .image(relativePath)
+                .image(fileGetService.normalization(imagePath))
                 .fileType(fileUploadService.setFileType(imagePath))
                 .build();
         galleryRepository.save(gallery);

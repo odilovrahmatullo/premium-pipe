@@ -1,11 +1,11 @@
 <!doctype html>
 <html xmlns:th="http://www.thymeleaf.org" lang="en" data-bs-theme="auto">
 
-<head th:replace="admin/blocks/header::adminHead('Category')"></head>
+<head th:replace="~{admin/blocks/header::adminHead('Banners')}"></head>
 
 <body>
 
-<nav th:replace="admin/blocks/navbar::navbar"></nav>
+<nav th:replace="~{admin/blocks/navbar::navbar}"></nav>
 
 <!-- MAIN CONTENT -->
 <div class="main-content">
@@ -22,7 +22,7 @@
               <div class="col">
                 <!-- Title -->
                 <h1 class="header-title text-truncate">
-                  Category
+                  Banners
                 </h1>
 
               </div>
@@ -33,9 +33,9 @@
               <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
                   <li class="breadcrumb-item"><a href="#">Main</a></li>
-                  <li class="breadcrumb-item"><a th:href="@{/admin/category}">Category</a></li>
+                  <li class="breadcrumb-item"><a th:href="@{/admin/banner}">Banners</a></li>
                   <li class="breadcrumb-item active" aria-current="page">
-                    Categories
+                    Banners
                   </li>
                 </ol>
               </nav>
@@ -43,13 +43,14 @@
           </div>
           <!-- Content -->
           <form role="form" class="row" method="post" enctype="multipart/form-data"
-                th:action="@{/admin/category/create}" th:object="${object}">
+                th:action="@{/admin/banner/create}" th:object="${object}">
+
             <div class="col-12 col-xl-8">
               <div class="card mt-3">
                 <div class="card-header p-4 pb-0">
                   <ul class="nav nav-tabs" id="myTab" role="tablist">
                     <li class="nav-item" role="presentation" th:each="lang : ${languages}">
-                      <button class="nav-link px-3 py-2 active" th:id="tab_ + ${ lang.code }"
+                      <button class="nav-link px-3 py-2 active" th:id="tab_ + ${ lang.code() }"
                               data-bs-toggle="tab"
                               th:data-bs-target="'#' + ${lang.code}" type="button" role="tab"
                               th:aria-controls="${lang.code}"
@@ -59,7 +60,7 @@
                       <button class="nav-link px-3 py-2" th:id="tab_ + ${ lang.code }"
                               data-bs-toggle="tab"
                               th:data-bs-target="'#' + ${lang.code}" type="button" role="tab"
-                              th:aria-controls="${lang.code}"
+                              th:aria-controls="${lang.code()}"
                               aria-selected="true" th:text="${lang.name}"
                               th:unless='${lang.isDefault()}'></button>
                     </li>
@@ -73,24 +74,115 @@
                       <div class="form-group">
                         <!-- Label  -->
                         <label class="form-label required">
-                          Name
+                          Title
                         </label>
                         <br>
                         <!-- Input -->
                         <input
                                 type="text"
                                 class="form-control"
-                                th:name="name[ + ${lang.code} + ]"
-                                th:field="*{name[__${lang.code}__]}"
-                        >
+                                th:name="title[ + ${lang.code} + ]"
+                                th:field="*{title[__${lang.code}__]}">
+                        <div class="invalid-feedback" style="display: block;"
+                             th:if="${#fields.hasErrors('title') && lang.isDefault()}"
+                             th:errors="*{title}"></div>
+                      </div>
+
+                      <div class="form-group">
+                        <!-- Label -->
+                        <label class="form-label mb-1">
+                          Description
+                        </label>
+                        <br>
+                        <!-- Textarea -->
+                        <textarea class="editor"
+                                  th:name="description[ + ${lang.code} + ]"
+                                  th:field="*{description[__${lang.code}__]}"
+                                  placeholder="Text"></textarea>
 
                         <div class="invalid-feedback" style="display: block;"
-                             th:if="${#fields.hasErrors('name') && lang.isDefault()}"
-                             th:errors="*{name}"></div>
+                             th:if="${#fields.hasErrors('description') && lang.isDefault()}"
+                             th:errors="*{description}"></div>
+                      </div>
+
+                      <div class="form-group">
+                        <!-- Label -->
+                        <label class="form-label mb-1">
+                          Success
+                        </label>
+                        <br>
+                        <!-- Textarea -->
+                        <textarea class="editor"
+                                  th:name="success[ + ${lang.code} + ]"
+                                  th:field="*{success[__${lang.code}__]}"
+                                  placeholder="Text"></textarea>
+
+                        <div class="invalid-feedback" style="display: block;"
+                             th:if="${#fields.hasErrors('success') && lang.isDefault()}"
+                             th:errors="*{success}"></div>
+                      </div>
+
+                      <div class="form-group">
+                        <!-- Label -->
+                        <label class="form-label mb-1">
+                          Experience
+                        </label>
+                        <br>
+                        <!-- Textarea -->
+                        <textarea class="editor"
+                                  th:name="experience[ + ${lang.code} + ]"
+                                  th:field="*{experience[__${lang.code}__]}"
+                                  placeholder="Text"></textarea>
+
+                        <div class="invalid-feedback" style="display: block;"
+                             th:if="${#fields.hasErrors('experience') && lang.isDefault()}"
+                             th:errors="*{experience}"></div>
+                      </div>
+                      <div class="form-group">
+                        <!-- Label -->
+                        <label class="form-label mb-1">
+                          Projects
+                        </label>
+                        <br>
+                        <!-- Textarea -->
+                        <textarea class="editor"
+                                  th:name="projects[ + ${lang.code} + ]"
+                                  th:field="*{projects[__${lang.code}__]}"
+                                  placeholder="Text"></textarea>
+
+                        <div class="invalid-feedback" style="display: block;"
+                             th:if="${#fields.hasErrors('projects') && lang.isDefault()}"
+                             th:errors="*{projects}"></div>
+                      </div>
+                      <div class="form-group">
+                        <!-- Label -->
+                        <label class="form-label mb-1">
+                          Customers
+                        </label>
+                        <br>
+                        <!-- Textarea -->
+                        <textarea class="editor"
+                                  th:name="customers[ + ${lang.code} + ]"
+                                  th:field="*{customers[__${lang.code}__]}"
+                                  placeholder="Text"></textarea>
+
+                        <div class="invalid-feedback" style="display: block;"
+                             th:if="${#fields.hasErrors('customers') && lang.isDefault()}"
+                             th:errors="*{customers}"></div>
                       </div>
                     </div>
                   </div>
+                </div>
+              </div>
+            </div>
+
+
+            <div class="col-12 col-xl-4">
+              <div class="card mt-3">
+                <div class="card-body p-5">
+                  <!-- Project cover -->
                   <div class="form-group">
+
                     <!-- Label  -->
                     <label class="form-label mb-1">
                       Banner
@@ -109,14 +201,13 @@
                             file</label>
                         </div>
                       </div>
-
                       <!-- Preview -->
                       <div class="dz-preview-container" id="article-image" style="padding: 0;">
                         <div class="dz-preview dz-processing dz-complete dz-image-preview"
                              th:if="${requestImage != null}">
                           <div class="dz-image">
                             <img data-dz-thumbnail="" alt="Img"
-                                 th:src="${'/files/' + requestImage}">
+                                 th:src="@{${requestImage}}">
                           </div>
                           <div class="dz-details">
                             <div class="dz-filename"><span data-dz-name="">Image
@@ -135,11 +226,12 @@
                     <!-- Dropzone -->
                   </div>
 
+
                   <div class="btn-box text-end">
-                    <a th:href="@{/admin/category}" class="btn w-30 btn-secondary">
+                    <a th:href="@{/admin/product}" class="btn w-30 btn-secondary">
                       Cancel
                     </a>
-                    <input type="submit" href="#" class="btn w-40 btn-primary" value="Сохранить">
+                    <input type="submit" href="#" class="btn w-40 btn-primary" value="Save">
                   </div>
                 </div>
               </div>
@@ -152,9 +244,10 @@
   </div>
 </div>
 
-<div th:replace="admin/blocks/scripts::scripts"></div>
+<div th:replace="~{admin/blocks/scripts::scripts}"></div>
 <script th:src="@{/admin/assets/js/editor.js}"></script>
 
 </body>
+
 
 </html>

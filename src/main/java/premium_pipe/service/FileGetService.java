@@ -15,6 +15,7 @@ public class FileGetService {
         String[] pathSplit = path.split("uploads/");
         return "uploads/" + pathSplit[pathSplit.length-1];
     }
+
     public String getShowUrl(final String filePath) {
         if (filePath == null) return null;
         String newFilePath = getCorrectFilePath(filePath);
@@ -41,4 +42,18 @@ public class FileGetService {
 
         return getShowUrl(fileThumbUrl);
     }
+
+    public String normalization(String imagePath) {
+        if (imagePath == null || imagePath.isEmpty()) {
+            return "/uploads/default-image.jpg";
+        }
+
+        int index = imagePath.lastIndexOf("uploads");
+        if (index == -1) {
+            return "/uploads/default-image.jpg";
+        }
+
+        return "/"+imagePath.substring(index).replace("\\", "/");
+    }
+
 }

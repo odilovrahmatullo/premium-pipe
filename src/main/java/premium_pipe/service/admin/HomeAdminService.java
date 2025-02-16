@@ -31,10 +31,7 @@ public class HomeAdminService {
         String dropzoneKey = HomeEntity.class.getName();
         String image =  fileSessionService.getImage(dropzoneKey,session);
         HomeEntity home = homeMapper.toEntity(homeRequest);
-        int index = image.lastIndexOf("uploads");
-        String relativePath = image.substring(index-1);
-        relativePath = relativePath.replace('\\', '/');
-        home.setImage(relativePath);
+        home.setImage(fileGetService.normalization(image));
         homeRepository.save(home);
         fileSessionService.deleteFilesFromSession(dropzoneKey,session);
     }
@@ -59,16 +56,10 @@ public class HomeAdminService {
         String image = fileSessionService.getImage(dropzoneKey,session);
         homeMapper.update(request,home);
         if(image!=null){
-            home.setImage(image(image));
+            home.setImage(fileGetService.normalization(image));
         }
         homeRepository.save(home);
         fileSessionService.deleteFilesFromSession(dropzoneKey,session);
-    }
-
-    private String image(String path) {
-        int index = path.lastIndexOf("uploads");
-        String relativePath = path.substring(index - 1);
-        return relativePath.replace('\\', '/' );
     }
 
     public void deleteImage(Long id) {

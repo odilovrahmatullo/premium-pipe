@@ -135,49 +135,37 @@
                                     </div>
                                     <!-- Project cover -->
                                     <div class="form-group">
-
-                                        <!-- Label  -->
-                                        <label class="form-label mb-1">
-                                            Banner
-                                        </label>
-
-                                        <div class="dropzone dropzone-multiple border-0" data-max="1"
+                                        <label class="form-label mb-1">Banner</label>
+                                        <div class="dropzone dropzone-multiple border-0" data-max="20"
                                              data-delete="/api/files/delete"
                                              data-url="/api/files/upload" th:data-file-key="${dropzoneKey}">
-                                            <!-- Fallback -->
                                             <div class="dz-preview d-none"></div>
                                             <div class="fallback">
                                                 <div class="custom-file">
-                                                    <input type="file" name="file" class="form-control"
-                                                           id="customFileUploadMultiple">
-                                                    <label class="form-label" for="customFileUploadMultiple">Choose
-                                                        file</label>
+                                                    <input type="file" name="file" class="form-control" id="customFileUploadMultiple" multiple>
+                                                    <label class="form-label" for="customFileUploadMultiple">Choose file</label>
                                                 </div>
                                             </div>
                                             <!-- Preview -->
                                             <div class="dz-preview-container" id="article-image" style="padding: 0;">
-                                                <div class="dz-preview dz-processing dz-complete dz-image-preview"
-                                                     th:if="${requestImage != null}">
+                                                <div th:each="image : ${requestImage}" class="dz-preview dz-processing dz-complete dz-image-preview">
                                                     <div class="dz-image">
-                                                        <img data-dz-thumbnail="" alt="Img"
-                                                             th:src="${'/files/' + requestImage}">
+                                                        <img data-dz-thumbnail="" alt="Img" th:src="${'/uploads/' + image}">
                                                     </div>
                                                     <div class="dz-details">
-                                                        <div class="dz-filename"><span data-dz-name="">Image
-                                                        </span></div>
+                                                        <div class="dz-filename"><span data-dz-name="">Image</span></div>
                                                     </div>
                                                     <a class="dz-remove"
-                                                       onclick="var result = confirm('Want to delete?');if (result){submit_form('delete-form-image')}"
+                                                       onclick="var result = confirm('Want to delete?');if (result){submit_form('delete-form-' + [[${image}]])}"
                                                        data-dz-remove>Delete</a>
-                                                    <div th:action="@{/api/files/delete}" id="delete-form-image"
-                                                         method="post">
-                                                        <input type="hidden" name="file" th:value="${requestImage}">
-                                                    </div>
+                                                    <form th:action="@{/api/files/delete}" id="delete-form-[[${image}]]" method="post">
+                                                        <input type="hidden" name="file" th:value="${image}">
+                                                    </form>
                                                 </div>
                                             </div>
                                         </div>
-                                        <!-- Dropzone -->
                                     </div>
+
 
                                     <div class="btn-box text-end">
                                         <a th:href="@{/admin/product}" class="btn w-30 btn-secondary">

@@ -17,26 +17,19 @@ public class HomeRequest {
     @NotNull
     @JsonFieldConstraint
     private Map<String, String> title;
-    @NotNull
-    @JsonFieldConstraint
+
     private Map<String, String> description;
-    @NotNull
-    @JsonFieldConstraint
+
     private Map<String, String> experience;
-    @NotNull
-    @JsonFieldConstraint
+
     private Map<String, String> numberOfProjects;
-    @NotNull
-    @JsonFieldConstraint
+
     private Map<String, String> numberOfCustomers;
-    @NotNull
-    @JsonFieldConstraint
+
     private Map<String, String> openedDate;
-    @NotNull
-    @JsonFieldConstraint
+
     private Map<String, String> numberOfEmployees;
-    @NotNull
-    @JsonFieldConstraint
+
     private Map<String, String> neighborCountries;
 
 

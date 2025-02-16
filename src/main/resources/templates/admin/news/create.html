@@ -140,7 +140,7 @@
                                                      th:if="${requestImage != null}">
                                                     <div class="dz-image">
                                                         <img data-dz-thumbnail="" alt="Img"
-                                                             th:src="${'/files/' + requestImage}">
+                                                             th:src="@{${requestImage}}">
                                                     </div>
                                                     <div class="dz-details">
                                                         <div class="dz-filename"><span data-dz-name="">Image

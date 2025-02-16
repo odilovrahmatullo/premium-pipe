@@ -2,7 +2,6 @@ package premium_pipe.util;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 import premium_pipe.util.validator.JsonFieldConstraint;
-
 import java.util.Map;
 
 public class JsonFieldValidate
