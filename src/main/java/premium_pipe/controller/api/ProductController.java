@@ -28,11 +28,10 @@ public class ProductController {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
     }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<ProductResponse> getById(@PathVariable("id") Long id, HttpServletRequest request) {
+    @GetMapping("/{slug}")
+    public ResponseEntity<ProductResponse> getBySlug(@PathVariable("slug") String slug, HttpServletRequest request) {
         try {
-            return ResponseEntity.ok(productService.getById(id, request));
+            return ResponseEntity.ok(productService.getBySlug(slug, request));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }

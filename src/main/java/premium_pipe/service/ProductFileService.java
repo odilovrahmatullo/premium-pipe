@@ -1,6 +1,7 @@
 package premium_pipe.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import premium_pipe.entity.ProductEntity;
 import premium_pipe.entity.ProductFileEntity;
@@ -15,18 +16,18 @@ import java.util.List;
 public class ProductFileService {
     private final ProductFileRepository productFileRepository;
     private final FileDeleteService fileDeleteService;
+    private final FileGetService fileGetService;
+    @Value("${upload.url}")
+    private String domainName;
+
     public void create(ProductEntity productEntity, List<String> imagesPaths) {
         if (imagesPaths == null || imagesPaths.isEmpty()) {
-            imagesPaths = List.of("/uploads/default-image.jpg");
+            imagesPaths = List.of(fileGetService.normalization(null));
         }
         for(String imagePath:imagesPaths){
-                int index = imagePath.lastIndexOf("uploads");
-                String relativePath = imagePath.substring(index-1   );
-                relativePath = relativePath.replace('\\', '/');
-
             ProductFileEntity pf = ProductFileEntity.builder()
                     .product(productEntity)
-                    .image(relativePath)
+                    .image(fileGetService.normalization(imagePath))
                     .build();
             productFileRepository.save(pf);
         }
@@ -36,7 +37,7 @@ public class ProductFileService {
         List<ProductFileEntity> fileResponses = productFileRepository.getProductFIle(entity);
         List<String> images = new ArrayList<>();
         for(ProductFileEntity image : fileResponses){
-            images.add(image.getImage());
+            images.add(domainName+image.getImage());
         }
         return images;
     }

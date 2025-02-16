@@ -7,7 +7,9 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 import premium_pipe.entity.CategoryEntity;
 import premium_pipe.entity.ProductEntity;
+import premium_pipe.model.response.ProductResponse;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface ProductRepository extends CrudRepository<ProductEntity,Long> {
@@ -20,4 +22,19 @@ public interface ProductRepository extends CrudRepository<ProductEntity,Long> {
 
     @Query("FROM ProductEntity p where (lower(p.name) like lower(concat('%',:search,'%') ) ) and p.category = :category order by p.id desc ")
     Page<ProductEntity> getProductsByCategory(@Param("search") String search, Pageable pageable,@Param("category") CategoryEntity category);
+
+    @Query("FROM ProductEntity where category = ?1")
+    List<ProductEntity> getList(CategoryEntity category);
+
+    @Query("FROM ProductEntity where category = ?1 ")
+    Page<ProductEntity> getByCategory(CategoryEntity category, Pageable pageable);
+
+    Optional<ProductEntity> findBySlug(String slug);
+
+    @Query("FROM ProductEntity where id != ?1 order by createdDate desc")
+    List<ProductEntity> getProductsExceptThat(final Long id);
+
+    Boolean existsBySlug(String slug);
+
+    Boolean existsBySlugAndIdNot(String slug, Long id);
 }

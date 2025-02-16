@@ -3,6 +3,8 @@ package premium_pipe.entity;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import premium_pipe.util.HashMapConverter;
 import premium_pipe.util.validator.JsonFieldConstraint;
 
@@ -28,8 +30,9 @@ public class ProductEntity {
     @Column(columnDefinition = "TEXT")
     private Map<String, String> description;
 
-    @ManyToOne
+    @ManyToOne()
     @JoinColumn(name = "category_id")
+    @OnDelete(action = OnDeleteAction.SET_NULL)
     private CategoryEntity category;
 
     @Column(name = "slug")

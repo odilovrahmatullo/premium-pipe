@@ -3,6 +3,7 @@ package premium_pipe.service.admin;
 import jakarta.servlet.http.HttpSession;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -25,11 +26,12 @@ public class ProductAdminService {
     private final ProductRepository productRepository;
     private final CategoryService categoryService;
     private final ProductFileService productFileService;
-    private final CategoryAdminService categoryAdminService;
+    private final @Lazy CategoryAdminService categoryAdminService;
     private final ProductMapper productMapper;
     private final FileSessionService fileSessionService;
     private final FileDeleteService fileDeleteService;
     private final ProductInfoAdminService productInfoAdminService;
+    private final ProductSlugService productSlugService;
 
     @Transactional
     public void createProduct(final ProductAdminRequest product, HttpSession session) {
@@ -37,7 +39,9 @@ public class ProductAdminService {
         List<String> imagesPath = fileSessionService.getImages(dropzoneKey, session);
         CategoryEntity category = categoryService.getCategoryEntity(product.getCategoryId());
         ProductEntity productEntity = productMapper.toEntity(product);
+        String slug = productSlugService.generateSlug(product.getName());
         productEntity.setCategory(category);
+        productEntity.setSlug(slug);
         productRepository.save(productEntity);
         productFileService.create(productEntity, imagesPath);
         if(product.getProductDetails() != null && !product.getProductDetails().isEmpty()) {

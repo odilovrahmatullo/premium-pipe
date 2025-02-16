@@ -40,6 +40,7 @@ public class SpringSecurityConfig {
                             "/api/category/**",
                             "/api/product/**",
                             "/api/news/**",
+                            "/uploads/**",
                             "/api/contact/**",
                             "/api/language/**")
                     .permitAll()
@@ -90,7 +91,8 @@ public class SpringSecurityConfig {
                                                     "/admin/contact/**",
                                                     "/admin/language/**",
                                                     "/admin/about/**",
-                                                    "/admin/partner/**"
+                                                    "/admin/partner/**",
+                                                    "/admin/banner/**"
                                             ).hasRole("ADMIN")
                     )
                     .formLogin(
