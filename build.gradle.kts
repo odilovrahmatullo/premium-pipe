@@ -8,9 +8,6 @@
 		// https://github.com/spring-projects/spring-boot/releases
 		id("org.springframework.boot") version "3.3.6"
 
-		// https://github.com/n0mer/gradle-git-properties/releases
-		id("com.gorylenko.gradle-git-properties") version "2.4.1"
-
 		// https://github.com/spotbugs/spotbugs-gradle-plugin/releases
 		id("com.github.spotbugs") version "6.0.7"
 

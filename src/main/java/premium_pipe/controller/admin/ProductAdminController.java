@@ -102,8 +102,6 @@ public class ProductAdminController {
                        final RedirectAttributes redirectAttributes,
                        final Model model,
                        final HttpSession session) {
-        LanguageEntity language = languageService.findDefault();
-        List<LanguageResponse> languages = languageService.getActives();
         ProductEntity product = productAdminService.getProductEntity(id);
         if (result.hasErrors()) {
             setCommonAttributes(model,session,par);
