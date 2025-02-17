@@ -5,7 +5,7 @@ FROM eclipse-temurin:21-jdk-alpine
 WORKDIR /app
 
 # build.gradle va settings.gradle fayllarni ko'chirib olish
-COPY build.gradle settings.gradle gradlew ./
+COPY build.gradle.kts settings.gradle.kts gradlew ./
 COPY gradle gradle
 
 # Gradle wrapper'ni bajariladigan qilish
