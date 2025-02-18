@@ -5,7 +5,7 @@ FROM eclipse-temurin:21-jdk-alpine
 WORKDIR /app
 
 # JAR faylni container ichiga nusxalash
-COPY build/libs/premium-pipe.jar app.jar
+COPY libs/premium-pipe.jar app.jar
 
 # Spring Boot 8080 portda ishlaydi
 EXPOSE 8080
