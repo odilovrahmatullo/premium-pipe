@@ -10,10 +10,21 @@ import java.nio.file.Paths;
 public class AdditionalResourceWebConfiguration implements WebMvcConfigurer {
   @Override
   public void addResourceHandlers(final ResourceHandlerRegistry registry) {
+    // Uploads uchun
     String uploadsPath = "file:" + Paths.get("uploads").toAbsolutePath().toString() + "/";
-
     registry.addResourceHandler("/uploads/**")
             .addResourceLocations(uploadsPath)
+            .setCachePeriod(3600)
+            .resourceChain(true);
+
+    // Statik fayllar uchun
+    registry.addResourceHandler("/admin/assets/**")
+            .addResourceLocations("classpath:/static/admin/assets/")
+            .setCachePeriod(3600)
+            .resourceChain(true);
+
+    registry.addResourceHandler("/admin/src/**")
+            .addResourceLocations("classpath:/static/admin/src/")
             .setCachePeriod(3600)
             .resourceChain(true);
   }
