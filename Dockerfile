@@ -1,15 +1,14 @@
-FROM ubuntu:latest AS build
+# Java 21 JDK bilan Alpine Linux asosida engil Docker image
+FROM eclipse-temurin:21-jdk-alpine
 
-RUN apt-get update
-RUN apt-get install openjdk-21-jdk -y
-COPY . .
+# Ilovani ishga tushirish uchun ishlatiladigan ishchi katalog
+WORKDIR /app
 
-RUN ./gradlew bootJar --no-daemon
+# JAR faylni container ichiga nusxalash
+COPY build/libs/premium-pipe.jar app.jar
 
-FROM openjdk:21-jdk-slim
-
+# Spring Boot 8080 portda ishlaydi
 EXPOSE 8080
 
-COPY --from=build /build/libs/premium-pipe-0.0.1-SNAPSHOT.jar app.jar
-
-ENTRYPOINT ["java", "-jar", "app.jar"]
+# Java ilovasini ishga tushirish
+CMD ["java", "-jar", "app.jar"]
