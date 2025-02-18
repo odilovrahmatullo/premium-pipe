@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import premium_pipe.entity.ProductEntity;
 import premium_pipe.entity.ProductInfoEntity;
+import premium_pipe.exception.NotFoundException;
 import premium_pipe.mapper.ProductInfoMapper;
 import premium_pipe.model.request.ProductInfoRequest;
 import premium_pipe.model.response.ProductInfoResponse;
@@ -35,5 +36,9 @@ public class ProductInfoService {
                     .build();
             productInfoRepository.save(pi);
         }
+    }
+
+    public ProductInfoEntity getEntity(final Long id){
+        return productInfoRepository.findById(id).orElseThrow(()-> new NotFoundException("ProductInfo not found"));
     }
 }
