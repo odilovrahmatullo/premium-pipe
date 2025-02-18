@@ -26,7 +26,6 @@ public class SpringSecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
-
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests(authorizationManagerRequestMatcherRegistry -> {
@@ -42,7 +41,9 @@ public class SpringSecurityConfig {
                             "/api/news/**",
                             "/uploads/**",
                             "/api/contact/**",
-                            "/api/language/**")
+                            "/api/language/**",
+                            "/api/translation",
+                            "/api/banner")
                     .permitAll()
                     .anyRequest()
                     .authenticated();
@@ -92,7 +93,9 @@ public class SpringSecurityConfig {
                                                     "/admin/language/**",
                                                     "/admin/about/**",
                                                     "/admin/partner/**",
-                                                    "/admin/banner/**"
+                                                    "/admin/banner/**",
+                                                    "/admin/type/**",
+                                                    "/admin/translation/**"
                                             ).hasRole("ADMIN")
                     )
                     .formLogin(

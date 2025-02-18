@@ -1,0 +1,171 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml" lang="en" data-bs-theme="auto">
+
+<head th:replace="~{admin/blocks/header::adminHead('Book')}"></head>
+
+<body>
+
+<nav th:replace="~{admin/blocks/navbar::navbar}"></nav>
+
+<!-- MAIN CONTENT -->
+<div class="main-content">
+  <div th:replace="~{admin/blocks/message::message}"></div>
+  <div class="container-fluid">
+    <div class="messages"></div>
+    <div class="row justify-content-center">
+      <div class="col-12">
+        <!-- Header -->
+        <div class="header mb-0">
+          <div class="header-body top-scroller">
+            <div class="row align-items-center">
+              <div class="col">
+                <!-- Title -->
+                <h1 class="header-title text-truncate">
+                  Books
+                </h1>
+
+              </div>
+              <div class="col-auto">
+                <!-- Navigation (button group) -->
+
+                <!-- Buttons -->
+                <a th:href="@{/admin/translation/create}" class="btn btn-primary ms-2">
+                  Add Translation
+                </a>
+
+              </div>
+            </div> <!-- / .row -->
+          </div>
+          <div class="card mt-4">
+            <div class="card-body" style="padding: 20px;">
+              <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                  <li class="breadcrumb-item"><a href="#">Main</a></li>
+                  <li class="breadcrumb-item active" aria-current="page">
+                    <a th:href="@{/admin/translation}" style="text-decoration: none;">Translation</a>
+                  </li>
+                </ol>
+              </nav>
+            </div>
+          </div>
+          <!-- Content -->
+          <div class="card" id="contactsList">
+            <form id="filterForm" method="GET" action="/admin/translation">
+              <div style="padding: 0px 20px" class="row">
+
+                <div class="col-md-2">
+                  <label for="static" class="form-label">StaticType</label>
+                  <select name="staticId" id="static" class="form-control" th:value="${params.staticId}">
+                    <option value="" th:class="form-select">All</option>
+                    <option th:each="type : ${types}"
+                            th:value="${type.id}"
+                            th:text="${type.name}"
+                            th:selected="${type.id == params.staticId}"></option>
+                  </select>
+                </div>
+                <!-- Filter Button -->
+                <div class="col-md-1 d-flex align-items-end">
+                  <button type="button" class="btn btn-primary w-100" onclick="submitFilteredForm()">Filter</button>
+                </div>
+              </div>
+            </form>
+
+
+            <div class="table-responsive" style="padding: 20px;">
+
+
+              <table class="table table-sm table-hover table-nowrap card-table">
+                <thead>
+                <tr>
+                  <th>
+                    <a class="list-sort text-muted">№</a>
+                  </th>
+                  <th>
+                    <a class="list-sort text-muted">Key</a>
+                  </th>
+                  <th>
+                    <a class="list-sort text-muted">Key(Uz)</a>
+                  </th>
+                  <th>
+                    <a class="list-sort text-muted">Key(Ru)</a>
+                  </th>
+                  <th>
+                    <a class="list-sort text-muted">Key(En)</a>
+                  </th>
+                  <th>
+                    <a class="list-sort text-muted">Static Type </a>
+                  </th>
+                  <th style="width: 200px;"></th>
+                </tr>
+                </thead>
+
+                <tbody class="list fs-base">
+                <tr th:each="object, index : ${objects}">
+                  <td>
+                    <a class="item-title" th:text="${(page) * size + index.index + 1}" />
+                  </td>
+                  <td>
+                    <p class="item-phone text-reset" th:text="${object.keyword}"></p>
+                  </td>
+                  <td>
+                    <p class="item-phone text-reset" th:text="${object.keyUz}"></p>
+                  </td>
+                  <td>
+                    <p class="item-phone text-reset" th:text="${object.keyRu}"></p>
+                  </td>
+                  <td>
+                    <p class="item-phone text-reset" th:text="${object.keyEn}"></p>
+                  </td>
+                  <td>
+                    <p style="font-weight: bold" class="item-phone text-reset" th:text="${object.getStaticTypeName().name}"></p>
+                  </td>
+                  <td>
+                    <div class="d-flex justify-content-end">
+                      <a th:href="@{/admin/translation/{id}/edit(id=${object.id})}"
+                         class="btn btn-sm btn-info">
+                        <i class="fe fe-edit-2"></i>
+                      </a>
+                      <a class="btn btn-sm btn-danger ms-3"
+                         th:onclick="|let result = confirm('Want to delete?');if(result) {form_submit_in_table('delete-form${object.id}')}|">
+                        <i class="fe fe-trash"></i></a>
+                      <form th:action="@{/admin/translation/{id}/delete(id=${object.id})}"
+                            th:id="delete-form + ${object.id}" method="POST"
+                            style="display: none;">
+                      </form>
+                    </div>
+                  </td>
+                </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="card-footer d-flex justify-content-between"
+                 th:replace="~{admin/blocks/pagination::pagination}"></div>
+          </div>
+          <!-- Content End -->
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div th:replace="~{admin/blocks/scripts::scripts}"></div>
+
+<script>
+  function submitFilteredForm() {
+    const form = document.getElementById('filterForm');
+    const inputs = form.querySelectorAll('input, select');
+
+    inputs.forEach(input => {
+      if (!input.value) {
+        input.removeAttribute('name'); // Bo'sh maydonlarni query parametrlarga qo'shilishini oldini oladi
+      }
+    });
+
+    form.submit(); // Formani jo'natadi
+  }
+</script>
+
+</body>
+
+</html>

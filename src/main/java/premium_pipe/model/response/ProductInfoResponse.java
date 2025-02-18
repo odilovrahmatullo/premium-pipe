@@ -17,4 +17,6 @@ public class ProductInfoResponse {
     private String diameterValue;
     private String packageValue;
     private String unitValue;
+    private Integer quantity;
+    private Boolean isOrdered;
 }

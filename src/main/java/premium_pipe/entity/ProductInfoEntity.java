@@ -31,6 +31,9 @@ public class ProductInfoEntity {
     private String unitValue;
     @Column(name = "package_value")
     private String packageValue;
+    private Integer quantity = 1;
+    @Column(name = "is_ordered")
+    private Boolean isOrdered = false;
     @CreationTimestamp
     @Column(name = "created_date")
     private LocalDateTime createdDate;
