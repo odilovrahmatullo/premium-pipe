@@ -1,0 +1,15 @@
+version: "3.8"
+
+services:
+  app:
+    image: premium-pipe-app
+    build: .
+    ports:
+      - "8080:8080"
+    volumes:
+      - premium-pipe_upload:/app/uploads
+    restart: always
+
+volumes:
+  premium-pipe_upload:
+    driver: local
