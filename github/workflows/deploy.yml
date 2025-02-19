@@ -3,7 +3,7 @@ name: Build and Deploy to Railway
 on:
   push:
     branches:
-      - main  # Faqat main branch ga push bo‘lganda ishga tushadi
+      - master  # Faqat main branch ga push bo‘lganda ishga tushadi
 
 jobs:
   deploy:
