@@ -20,35 +20,27 @@ public class HomeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, unique = true,columnDefinition = "TEXT")
     @Convert(converter = HashMapConverter.class)
-    @JsonFieldConstraint
     private Map<String, String> title;
 
     @Convert(converter = HashMapConverter.class)
-    @JsonFieldConstraint
     @Column(columnDefinition = "TEXT")
     private Map<String, String> description;
 
-    @Column(nullable = false, unique = true,columnDefinition = "TEXT")
+    @Column(name = "description_2", columnDefinition = "TEXT")
     @Convert(converter = HashMapConverter.class)
-    @JsonFieldConstraint
     private Map<String, String> description2;
 
     @Convert(converter = HashMapConverter.class)
-    @JsonFieldConstraint
-    @Column(columnDefinition = "TEXT",name = "opened_date")
+    @Column(name = "opened_date")
     private Map<String, String> openedDate;
 
     @Convert(converter = HashMapConverter.class)
-    @JsonFieldConstraint
-    @Column(columnDefinition = "TEXT",name = "employees_count")
+    @Column(name = "employees_count")
     private Map<String, String> numberOfEmployees;
 
-
-    @Column(nullable = false, unique = true, name = "neighbor_countries",columnDefinition = "TEXT")
+    @Column(name = "neighbor_countries")
     @Convert(converter = HashMapConverter.class)
-    @JsonFieldConstraint
     private Map<String, String> neighborCountries;
 
     @Column(name = "image")

@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import premium_pipe.entity.HomeEntity;
 import premium_pipe.entity.LanguageEntity;
+import premium_pipe.exception.BaseException;
 import premium_pipe.exception.NotFoundException;
 import premium_pipe.model.request.HomeRequest;
 import premium_pipe.model.request.RequestParams;
@@ -54,23 +55,30 @@ public class HomeAdminController {
                              final HttpSession session,
                              final RedirectAttributes redirectAttributes) {
         List<LanguageResponse> languages = languageService.getActives();
+
         LanguageEntity defaultLang = languageService.findDefault();
+
         String dropzoneKey = HomeEntity.class.getName();
+
         String image = fileSessionService.getImage(dropzoneKey, session);
         model.addAttribute("requestImage", image);
+
         if (result.hasErrors()) {
             model.addAttribute("languages", languages);
             model.addAttribute("defaultLang", defaultLang);
             model.addAttribute("object", homeRequest);
             return "admin/about/create";
         }
-        model.addAttribute("image", image);
-        model.addAttribute("requestImage", image);
-        model.addAttribute("dropzoneKey", dropzoneKey);
+
         try {
             homeAdminService.create(homeRequest, session);
-        } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
+        } catch (Exception ex) {
+            if (ex instanceof BaseException) {
+                model.addAttribute("error", ((BaseException) ex).getErrors());
+            } else {
+                redirectAttributes.addFlashAttribute("errorMessage", ex.getMessage());
+            }
+            return "admin/about/create";
         }
         return "redirect:/admin/about";
     }
@@ -130,12 +138,21 @@ public class HomeAdminController {
                        final HttpSession session
     ) {
         HomeEntity home = homeAdminService.getHome(id);
+
         LanguageEntity defaultLang = languageService.findDefault();
         List<LanguageResponse> languages = languageService.getActives();
         model.addAttribute("id",id);
-        String requestImage = fileSessionService.getImage(HomeEntity.class.getName(),session);
-        model.addAttribute("image", requestImage != null ? requestImage : fileGetService.getFileAbsoluteUrl(home.getImage(), 300, 300));
-        model.addAttribute("requestImage",requestImage);
+
+        String dropzoneKey = HomeEntity.class.getName();;
+        String requestImage = fileSessionService.getImage(dropzoneKey,session);
+        if(requestImage!=null){
+            model.addAttribute("requestImage",requestImage);
+        }
+        else{
+            String image = home.getImage();
+            model.addAttribute("image",fileGetService.getFileAbsoluteUrl(image,300,300));
+        }
+
         if (result.hasErrors()) {
             model.addAttribute("defaultLang", defaultLang);
             model.addAttribute("languages", languages);

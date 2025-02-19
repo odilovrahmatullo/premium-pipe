@@ -85,6 +85,10 @@
                   </td>
                   <td>
                     <div class="d-flex justify-content-end">
+                      <a th:href="@{/admin/banner/{id}/edit(id=${object.id})}"
+                         class="btn btn-sm btn-info">
+                        <i class="fe fe-edit-2"></i>
+                      </a>
                       <a class="btn btn-sm btn-danger ms-3"
                          th:onclick="|let result = confirm('Want to delete?');if (result){form_submit_in_table('delete-form${object.id}')}|">
                         <i class="fe fe-trash"></i></a>

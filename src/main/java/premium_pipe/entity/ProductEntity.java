@@ -26,7 +26,6 @@ public class ProductEntity {
     private Map<String, String> name;
 
     @Convert(converter = HashMapConverter.class)
-    @JsonFieldConstraint
     @Column(columnDefinition = "TEXT")
     private Map<String, String> description;
 

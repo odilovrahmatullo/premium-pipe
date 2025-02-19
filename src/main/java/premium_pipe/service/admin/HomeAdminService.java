@@ -65,7 +65,9 @@ public class HomeAdminService {
     public void deleteImage(Long id) {
         HomeEntity home = getHome(id);
         fileDeleteService.deleteFile(home.getImage());
+        home.setImage(null);
         homeRepository.save(home);
     }
+
 }
 

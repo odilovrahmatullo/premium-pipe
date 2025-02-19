@@ -20,11 +20,7 @@ public class HomeRequest {
 
     private Map<String, String> description;
 
-    private Map<String, String> experience;
-
-    private Map<String, String> numberOfProjects;
-
-    private Map<String, String> numberOfCustomers;
+    private Map<String, String> description2;
 
     private Map<String, String> openedDate;
 

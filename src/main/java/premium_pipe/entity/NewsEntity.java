@@ -27,8 +27,6 @@ public class NewsEntity {
     private Map<String, String> title;
 
     @Convert(converter = HashMapConverter.class)
-    @JsonFieldConstraint
-    @Column(columnDefinition = "TEXT")
     private Map<String, String> description;
 
     @Column(name = "image")

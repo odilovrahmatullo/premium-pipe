@@ -1,11 +1,11 @@
 <!doctype html>
-<html xmlns:th="http://www.thymeleaf.org" lang="ru" data-bs-theme="auto">
+<html xmlns:th="http://www.thymeleaf.org" lang="en" data-bs-theme="auto">
 
-<head th:replace="admin/blocks/header::adminHead('Categories')"></head>
+<head th:replace="~{admin/blocks/header::adminHead('Categories')}"></head>
 
 <body>
 
-<nav th:replace="admin/blocks/navbar::navbar"></nav>
+<nav th:replace="~{admin/blocks/navbar::navbar}"></nav>
 
 <!-- MAIN CONTENT -->
 <div class="main-content">
@@ -24,6 +24,7 @@
                 <h1 class="header-title text-truncate">
                   Categories
                 </h1>
+
               </div>
             </div> <!-- / .row -->
           </div>
@@ -34,12 +35,14 @@
                   <li class="breadcrumb-item"><a href="#">Main</a></li>
                   <li class="breadcrumb-item"><a th:href="@{/admin/category}">Categories</a></li>
                   <li class="breadcrumb-item active" aria-current="page">
-                    Category
+                    Categories
                   </li>
                 </ol>
               </nav>
             </div>
           </div>
+        </div>
+        <div>
           <!-- Content -->
           <form role="form" class="row" method="post" enctype="multipart/form-data"
                 th:action="@{/admin/category/{id}/edit(id=${id})}" th:object="${object}">
@@ -72,7 +75,7 @@
                       <div class="form-group">
                         <!-- Label  -->
                         <label class="form-label required">
-                          Name
+                          Title
                         </label>
                         <br>
                         <!-- Input -->
@@ -87,11 +90,96 @@
                              th:if="${#fields.hasErrors('name') && lang.isDefault()}"
                              th:errors="*{name}"></div>
                       </div>
+
+                      <div class="form-group">
+                        <!-- Label -->
+                        <label class="form-label mb-1">
+                          Description
+                        </label>
+                        <br>
+                        <!-- Textarea -->
+                        <textarea class="editor"
+                                  th:name="description[ + ${lang.code} + ]"
+                                  th:field="*{description[__${lang.code}__]}"
+                                  placeholder="Text"></textarea>
+
+                        <div class="invalid-feedback" style="display: block;"
+                             th:if="${#fields.hasErrors('description') && lang.isDefault()}"
+                             th:errors="*{description}"></div>
+                      </div>
                     </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-12 col-xl-4">
+              <div class="card mt-3">
+                <div class="card-body p-5">
+                  <div class="form-group">
+                    <!-- Label  -->
+                    <label class="form-label mb-1">
+                      Banner
+                    </label>
+                    <div class="dropzone dropzone-multiple border-0" data-max="1"
+                         data-delete="/api/files/delete"
+                         data-url="/api/files/upload" th:data-file-key="${dropzoneKey}">
+                      <!-- Fallback -->
+                      <div class="dz-preview d-none"></div>
+                      <div class="fallback">
+                        <div class="custom-file">
+                          <input type="file" name="file" class="form-control"
+                                 id="customFileUploadMultiple">
+                          <label class="form-label" for="customFileUploadMultiple">Choose
+                            file</label>
+                        </div>
+                      </div>
+
+                      <!-- Preview -->
+                      <div class="dz-preview-container" style="padding: 0;"
+                           id="dropzone-previews">
+                        <div class="dz-preview dz-processing dz-complete dz-image-preview"
+                             style="position: relative;" th:if="${image != null}">
+                          <div class="dz-image avatar">
+                            <img data-dz-thumbnail="" alt="Image" th:src="${image}">
+                          </div>
+                          <div class="dz-details">
+                            <div class="dz-filename"><span data-dz-name="">Image</span>
+                            </div>
+                          </div>
+                          <a class="dz-remove"
+                             onclick="var result = confirm('Want to delete?');if (result){submit_form('delete-form-delete-image')}"
+                             data-dz-remove>Delete</a>
+                          <div th:action="@{/admin/category/{id}/deleteImage(id=${id})}"
+                               id="delete-form-delete-image" method="post"></div>
+                        </div>
+
+                        <div class="dz-preview dz-processing dz-complete dz-image-preview"
+                             th:if="${requestImage != null}">
+                          <div class="dz-image">
+                            <img data-dz-thumbnail="" alt="Img"
+                                 th:src="${requestImage}">
+                          </div>
+                          <div class="dz-details">
+                            <div class="dz-filename"><span data-dz-name="">Image</span>
+                            </div>
+                          </div>
+                          <a class="dz-remove"
+                             onclick="var result = confirm('Want to delete?');if (result){submit_form('delete-form-image')}"
+                             data-dz-remove>Delete</a>
+                          <div th:action="@{/api/files/delete}" id="delete-form-image"
+                               method="post">
+                            <input type="hidden" name="filePath" th:value="${requestImage}">
+                          </div>
+                        </div>
+                      </div>
+
+                    </div>
+                    <!-- Dropzone -->
                   </div>
 
                   <div class="btn-box text-end">
-                    <a th:href="@{admin/category}" class="btn w-30 btn-secondary">
+                    <a th:href="@{/admin/category}" class="btn w-30 btn-secondary">
                       Cancel
                     </a>
                     <input type="submit" href="#" class="btn w-40 btn-primary" value="Сохранить">
@@ -99,6 +187,7 @@
                 </div>
               </div>
             </div>
+
           </form>
           <!-- Content End -->
         </div>
@@ -107,7 +196,7 @@
   </div>
 </div>
 
-<div th:replace="admin/blocks/scripts::scripts"></div>
+<div th:replace="~{admin/blocks/scripts::scripts}"></div>
 <script th:src="@{/admin/assets/js/editor.js}"></script>
 
 </body>
