@@ -3,6 +3,7 @@ package premium_pipe.mapper;
 import jakarta.servlet.http.HttpServletRequest;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
 import org.mapstruct.ReportingPolicy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -50,4 +51,5 @@ public abstract class BannerMapper {
         return domainName+imagePath;
     }
 
+    public abstract void update(BannerAdminRequest request, @MappingTarget BannerEntity banner);
 }

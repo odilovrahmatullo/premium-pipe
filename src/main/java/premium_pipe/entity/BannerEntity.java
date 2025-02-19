@@ -24,27 +24,21 @@ public class BannerEntity {
     private Long id;
 
     @Convert(converter = HashMapConverter.class)
-    @JsonFieldConstraint
     private Map<String, String> title;
 
     @Convert(converter = HashMapConverter.class)
-    @JsonFieldConstraint
     private Map<String, String> description;
 
     @Convert(converter = HashMapConverter.class)
-    @JsonFieldConstraint
     private Map<String, String> success;
 
     @Convert(converter = HashMapConverter.class)
-    @JsonFieldConstraint
     private Map<String, String> experience;
 
     @Convert(converter = HashMapConverter.class)
-    @JsonFieldConstraint
     private Map<String, String> projects;
 
     @Convert(converter = HashMapConverter.class)
-    @JsonFieldConstraint
     private Map<String, String> customers;
 
     @Column(name = "image")
