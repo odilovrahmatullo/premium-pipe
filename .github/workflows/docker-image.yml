@@ -1,0 +1,34 @@
+name: Deploy to Railway with Docker
+
+on:
+  push:
+    branches: [ "master" ]
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 🔹 1. Reponi clone qilish
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # 🔹 2. DockerHub'ga login qilish (token orqali)
+      - name: Login to DockerHub
+        run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+
+      # 🔹 3. Docker image build qilish
+      - name: Build Docker Image
+        run: docker build . --file Dockerfile --tag ${{ secrets.DOCKER_USERNAME }}/premium-pipe:latest
+
+      # 🔹 4. Docker image'ni DockerHub'ga push qilish
+      - name: Push Docker Image
+        run: docker push ${{ secrets.DOCKER_USERNAME }}/premium-pipe:latest
+
+      # 🔹 5. Railway API orqali deploy qilish
+      - name: Deploy to Railway
+        run: |
+          curl -X POST "https://backboard.railway.app/graphql/v2" \
+            -H "Content-Type: application/json" \
+            -H "Authorization: Bearer ${{ secrets.RAILWAY_API_TOKEN }}" \
+            --data '{"query":"mutation { deployProject(id:\"${{ secrets.RAILWAY_PROJECT_ID }}\") { id } }"}'
