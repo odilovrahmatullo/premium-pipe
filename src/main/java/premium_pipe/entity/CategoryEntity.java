@@ -27,7 +27,6 @@ public class CategoryEntity {
         @JsonFieldConstraint
         private Map<String, String> name;
         @Convert(converter = HashMapConverter.class)
-        @JsonFieldConstraint
         private Map<String, String> description;
         private String image;
         private String slug;

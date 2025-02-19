@@ -17,5 +17,7 @@ public class CategoryRequest{
     @NotNull
     @JsonFieldConstraint
     private Map<String, String> name;
+
+    private Map<String, String> description;
 }
 

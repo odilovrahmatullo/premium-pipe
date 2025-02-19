@@ -3,7 +3,9 @@ package premium_pipe.controller.admin;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.apache.coyote.Response;
 import org.springframework.data.domain.Page;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -17,12 +19,14 @@ import premium_pipe.model.request.RequestParams;
 import premium_pipe.model.response.LanguageResponse;
 import premium_pipe.model.response.admin.CategoryAdminResponse;
 import premium_pipe.model.response.admin.ProductAdminResponse;
+import premium_pipe.service.FileGetService;
 import premium_pipe.service.FileSessionService;
 import premium_pipe.service.LanguageService;
 import premium_pipe.service.admin.CategoryAdminService;
 import premium_pipe.service.admin.ProductAdminService;
 import premium_pipe.util.Paginate;
 import java.util.List;
+import java.util.Map;
 
 
 @Controller
@@ -33,6 +37,7 @@ public class CategoryAdminController {
     private final LanguageService languageService;
     private final ProductAdminService productAdminService;
     private final FileSessionService fileSessionService;
+    private final FileGetService fileGetService;
 
     @GetMapping("/create")
     public String createCategory(final Model model){
@@ -110,7 +115,9 @@ public class CategoryAdminController {
         List<LanguageResponse> languages = languageService.getActives();
         model.addAttribute("languages",languages);
         model.addAttribute("defaultLang",language);
+        model.addAttribute("image",car.image());
         model.addAttribute("object",car);
+        model.addAttribute("dropzoneKey",CategoryEntity.class.getName());
         model.addAttribute("id",id);
         return "admin/category/edit";
     }
@@ -120,14 +127,26 @@ public class CategoryAdminController {
             @PathVariable("id") Long id,
             @Valid @ModelAttribute("object")final CategoryRequest categoryRequest,
             final BindingResult result,
+            final HttpSession session,
             final Model model){
 
-        if(result.hasErrors()){
-            model.addAttribute("object",categoryRequest);
-            return "admin/category/edit";
+        CategoryEntity category = categoryAdminService.getCategoryEntity(id);
+
+        String dropzoneKey = CategoryEntity.class.getName();
+
+        String requestImage = fileSessionService.getImage(dropzoneKey,session);
+
+        if(requestImage!=null){
+            model.addAttribute("requestImage",requestImage);
+        }else{
+            String image = category.getImage();
+
+            model.addAttribute("image",fileGetService.getFileAbsoluteUrl(image,300,300));
         }
+
+        if(result.hasErrors()) return "admin/category/edit";
         try {
-            categoryAdminService.edit(id,categoryRequest);
+            categoryAdminService.edit(category,categoryRequest,session);
         }
         catch (Exception e){
             model.addAttribute("errorMessage",e.getMessage());
@@ -136,6 +155,19 @@ public class CategoryAdminController {
         }
 
         return "redirect:/admin/category";
+    }
+
+
+    @PostMapping("/{id}/deleteImage")
+    public ResponseEntity<?> deleteImage(@PathVariable("id") final Long id){
+        try {
+            categoryAdminService.deleteImage(id);
+        } catch (Exception exception) {
+            return ResponseEntity.status(403).body(Map.of("error", exception.getMessage()));
+        }
+
+        return ResponseEntity.ok().build();
+
     }
 
     @PostMapping("/{id}/delete")

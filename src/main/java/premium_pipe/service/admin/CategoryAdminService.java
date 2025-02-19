@@ -15,6 +15,7 @@ import premium_pipe.model.request.RequestParams;
 import premium_pipe.model.response.admin.CategoryAdminResponse;
 import premium_pipe.repository.CategoryRepository;
 import premium_pipe.service.CategorySlugService;
+import premium_pipe.service.FileDeleteService;
 import premium_pipe.service.FileGetService;
 import premium_pipe.service.FileSessionService;
 
@@ -29,6 +30,7 @@ public class CategoryAdminService {
     private final FileSessionService fileSessionService;
     private final CategorySlugService categorySlugService;
     private final FileGetService fileGetService;
+    private final FileDeleteService fileDeleteService;
 
     public void create(final CategoryRequest categoryRequest, HttpSession session){
         String dropzoneKey = CategoryEntity.class.getName();
@@ -38,9 +40,11 @@ public class CategoryAdminService {
                 .builder()
                 .image(fileGetService.normalization(imagePath))
                 .name(categoryRequest.getName())
+                .description(categoryRequest.getDescription())
                 .slug(slug)
                 .build();
         categoryRepository.save(category);
+        fileSessionService.deleteFilesFromSession(dropzoneKey,session);
     }
 
     public Page<CategoryAdminResponse> list(RequestParams params) {
@@ -54,10 +58,33 @@ public class CategoryAdminService {
         return categoryMapper.toDTO(entity);
     }
 
-    public void edit(Long id, CategoryRequest categoryRequest) {
-        CategoryEntity entity = getCategoryEntity(id);
-        entity.setName(categoryRequest.getName());
-        categoryRepository.save(entity);
+    public void edit(final CategoryEntity category, final CategoryRequest categoryRequest, final HttpSession session) {
+        Long id = category.getId();
+
+        String dropzoneKey = CategoryEntity.class.getName();
+
+        String imagePath = fileSessionService.getImage(dropzoneKey,session);
+
+        categoryMapper.update(category,categoryRequest);
+
+        String slug = categorySlugService.generateSlug(id,category.getName());
+
+        category.setSlug(slug);
+
+        if(imagePath!=null){
+            category.setImage(fileGetService.normalization(imagePath));
+        }
+
+        categoryRepository.save(category);
+
+        fileSessionService.deleteFilesFromSession(dropzoneKey,session);
+    }
+
+    public void deleteImage(final Long id) {
+        CategoryEntity category = getCategoryEntity(id);
+        fileDeleteService.deleteFile(category.getImage());
+        category.setImage(null);
+        categoryRepository.save(category);
     }
 
     public CategoryEntity getCategoryEntity(Long id){
