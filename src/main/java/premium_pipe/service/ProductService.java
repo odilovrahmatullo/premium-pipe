@@ -48,7 +48,7 @@ public class ProductService {
     }
 
     public List<ProductResponse> productsExceptThat(final ProductEntity product,final HttpServletRequest request){
-            List<ProductEntity> exceptProducts = productRepository.getProductsExceptThat(product.getId());
+            List<ProductEntity> exceptProducts = productRepository.getProductsExceptThat(product.getId(),product.getCategory().getId());
             return exceptProducts.stream().map(
                     p -> getByEntity(p,request)
             ).toList();
@@ -73,10 +73,10 @@ public class ProductService {
     }
 
 
-    public Page<ProductResponse> getByCategory(CategoryEntity category, Pageable pageable, HttpServletRequest request) {
-        Page<ProductEntity> products = productRepository.getByCategory(category, pageable);
-        return products.map(
+    public List<ProductResponse> getByCategory(CategoryEntity category, HttpServletRequest request) {
+        List<ProductEntity> products = productRepository.getByCategory(category);
+        return products.stream().map(
                 p -> getByEntity(p, request)
-        );
+        ).toList();
     }
 }

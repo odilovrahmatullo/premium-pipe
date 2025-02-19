@@ -37,18 +37,19 @@ public class CartItemService {
     }
 
 
-    public void removeItemFromCart(Long cartId,Long productInfoId){
+    public void removeItemFromCart(Long cartId,Long cartItemId){
         CartEntity cart = cartService.getCart(cartId);
-        CartItemEntity itemRemove = getCartItem(cartId,productInfoId);
+        CartItemEntity itemRemove = getCartItem(cartId,cartItemId);
         cart.removeItem(itemRemove);
         cartRepository.save(cart);
+        cart.updateTotalProducts();
     }
 
-    public void updateItemQuantity(Long cartId,Long productInfoId,int quantity){
+    public void updateItemQuantity(Long cartId,Long cartItemId,int quantity){
         CartEntity cart = cartService.getCart(cartId);
         cart.getCartItems()
                 .stream()
-                .filter(item -> item.getProductInfo().getId().equals(productInfoId))
+                .filter(item -> item.getProductInfo().getId().equals(cartItemId))
                 .findFirst()
                 .ifPresent(item ->
                         item.setQuantity(quantity));
@@ -57,10 +58,10 @@ public class CartItemService {
 
     }
 
-    public CartItemEntity getCartItem(final Long cartId,Long productInfoId){
+    public CartItemEntity getCartItem(final Long cartId,Long cartItemId){
         CartEntity cart = cartService.getCart(cartId);
         return cart.getCartItems().stream().filter(item ->
-                item.getProductInfo().getId().equals(productInfoId)).findFirst().orElseThrow(() ->
+                item.getProductInfo().getId().equals(cartItemId)).findFirst().orElseThrow(() ->
                 new NotFoundException("Product not found"));
     }
 

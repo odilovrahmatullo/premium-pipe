@@ -69,7 +69,10 @@ public class SpringSecurityConfig {
                                         "/api/contact/**",
                                         "/api/language/**",
                                         "/api/translation",
-                                        "/api/banner")
+                                        "/api/banner",
+                                        "/api/about",
+                                        "/api/gallery"
+                                )
                                 .permitAll()
                                 .anyRequest()
                                 .authenticated())
@@ -96,7 +99,8 @@ public class SpringSecurityConfig {
             configuration.setAllowedOrigins(
                     List.of(
                             "http://localhost:8080",
-                            "http://localhost:3000"));
+                            "http://localhost:3000",
+                            "https://premium-pipe.netlify.app"));
             configuration.addAllowedMethod("*");
             configuration.addAllowedHeader("*");
             UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();

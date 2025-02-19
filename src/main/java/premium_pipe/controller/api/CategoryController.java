@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import premium_pipe.model.request.RequestParams;
+import premium_pipe.model.response.CategoryApiDetailsResponse;
 import premium_pipe.model.response.CategoryApiResponse;
 import premium_pipe.model.response.ProductResponse;
 import premium_pipe.service.CategoryService;
@@ -38,11 +39,8 @@ public class CategoryController {
     }
 
     @GetMapping("/{slug}")
-    public ResponseEntity<Page<ProductResponse>> getCategoriesProduct(@PathVariable("slug") String slug,RequestParams params,HttpServletRequest request){
-        Pageable pageable = PageRequest.of(params.page(),params.size());
-
-        Page<ProductResponse> products = categoryService.getCategoriesProduct(slug,pageable,request);
-
+    public ResponseEntity<CategoryApiDetailsResponse> getCategoriesProduct(@PathVariable("slug") String slug, HttpServletRequest request){
+        CategoryApiDetailsResponse products = categoryService.getCategoriesWithProducts(slug,request);
         return ResponseEntity.ok(products);
     }
 

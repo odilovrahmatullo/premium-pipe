@@ -33,18 +33,7 @@ public class HomeEntity {
     @Column(nullable = false, unique = true,columnDefinition = "TEXT")
     @Convert(converter = HashMapConverter.class)
     @JsonFieldConstraint
-    private Map<String, String> experience;
-
-    @Convert(converter = HashMapConverter.class)
-    @JsonFieldConstraint
-    @Column(columnDefinition = "TEXT",name = "number_of_projects")
-    private Map<String, String> numberOfProjects;
-
-
-    @Column(nullable = false, unique = true,columnDefinition = "TEXT",name = "customers_count")
-    @Convert(converter = HashMapConverter.class)
-    @JsonFieldConstraint
-    private Map<String, String> numberOfCustomers;
+    private Map<String, String> description2;
 
     @Convert(converter = HashMapConverter.class)
     @JsonFieldConstraint

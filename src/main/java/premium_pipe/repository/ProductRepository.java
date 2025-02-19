@@ -27,12 +27,12 @@ public interface ProductRepository extends CrudRepository<ProductEntity,Long> {
     List<ProductEntity> getList(CategoryEntity category);
 
     @Query("FROM ProductEntity where category = ?1 ")
-    Page<ProductEntity> getByCategory(CategoryEntity category, Pageable pageable);
+    List<ProductEntity> getByCategory(CategoryEntity category);
 
     Optional<ProductEntity> findBySlug(String slug);
 
-    @Query("FROM ProductEntity where id != ?1 order by createdDate desc")
-    List<ProductEntity> getProductsExceptThat(final Long id);
+    @Query("FROM ProductEntity where id != ?1 and category.id=?2 order by createdDate desc")
+    List<ProductEntity> getProductsExceptThat(final Long id,final Long categoryId);
 
     Boolean existsBySlug(String slug);
 

@@ -13,9 +13,13 @@ import premium_pipe.entity.CategoryEntity;
 import premium_pipe.exception.NotFoundException;
 import premium_pipe.mapper.LocalizeMapper;
 import premium_pipe.model.request.RequestParams;
+import premium_pipe.model.response.CategoryApiDetailsResponse;
 import premium_pipe.model.response.CategoryApiResponse;
 import premium_pipe.model.response.ProductResponse;
 import premium_pipe.repository.CategoryRepository;
+import premium_pipe.repository.ProductRepository;
+
+import java.util.List;
 
 
 @Service
@@ -45,6 +49,7 @@ public class CategoryService {
                 .builder()
                 .id(c.getId())
                 .name(localizeMapper.translate(c.getName(),request))
+                .description(localizeMapper.translate(c.getDescription(),request))
                 .image(domainName+c.getImage())
                 .slug(c.getSlug())
                 .build();
@@ -56,8 +61,23 @@ public class CategoryService {
         return getByEntity(category,request);
     }
 
-    public Page<ProductResponse> getCategoriesProduct(String slug, Pageable pageable,HttpServletRequest request) {
+    public CategoryApiDetailsResponse getCategoriesWithProducts(String slug, HttpServletRequest request) {
         CategoryEntity category = categoryRepository.findBySlug(slug).orElseThrow(()-> new NotFoundException("Category not found"));
-        return productService.getByCategory(category,pageable,request);
+        List<CategoryEntity> categories = categoryRepository.getList();
+        CategoryApiDetailsResponse apiDetailsResponse = getCategoryDetail(category,request);
+        List<CategoryApiDetailsResponse> allCategories = categories.stream().map(one -> getCategoryDetail(one,request)).toList();
+        apiDetailsResponse.setAllCategories(allCategories);
+        return apiDetailsResponse;
+    }
+
+    public CategoryApiDetailsResponse getCategoryDetail(CategoryEntity category,HttpServletRequest request){
+        List<ProductResponse> products = productService.getByCategory(category,request);
+        return CategoryApiDetailsResponse.builder()
+                .id(category.getId())
+                .name(localizeMapper.translate(category.getName(),request))
+                .image(domainName+category.getImage())
+                .description(localizeMapper.translate(category.getDescription(),request))
+                .products(products)
+                .build();
     }
 }

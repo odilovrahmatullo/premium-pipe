@@ -30,6 +30,7 @@ public class NewsController {
         }
     }
 
+
     @GetMapping("/{slug}")
     public ResponseEntity<NewsResponse> one(@PathVariable("slug") final String slug,
                                             final HttpServletRequest request){
