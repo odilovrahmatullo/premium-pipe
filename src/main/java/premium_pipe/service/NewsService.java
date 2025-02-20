@@ -47,7 +47,6 @@ public class NewsService {
     public NewsEntity getNewsEntity(String slug){
        NewsEntity news = newsRepository.getBySlug(slug).orElseThrow(
                 ()-> new NotFoundException("News not found"));
-       news.setViewCount(news.getViewCount()+1);
        newsRepository.save(news);
        return news;
     }

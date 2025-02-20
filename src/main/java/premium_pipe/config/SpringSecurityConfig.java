@@ -71,7 +71,8 @@ public class SpringSecurityConfig {
                                         "/api/translation",
                                         "/api/banner",
                                         "/api/about",
-                                        "/api/gallery"
+                                        "/api/gallery",
+                                        "/api/partner"
                                 )
                                 .permitAll()
                                 .anyRequest()

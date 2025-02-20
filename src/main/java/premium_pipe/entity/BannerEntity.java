@@ -7,7 +7,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import premium_pipe.util.HashMapConverter;
-import premium_pipe.util.validator.JsonFieldConstraint;
 
 import java.time.LocalDateTime;
 import java.util.Map;
