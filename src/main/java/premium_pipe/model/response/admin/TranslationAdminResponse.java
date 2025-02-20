@@ -6,10 +6,10 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import premium_pipe.entity.StaticTypeEntity;
 
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
+@Builder
 public class TranslationAdminResponse {
     private Long id;
     private String keyword;
@@ -17,7 +17,6 @@ public class TranslationAdminResponse {
     private String keyRu;
     private String keyEn;
     private StaticTypeEntity staticTypeName;
-    private Long staticId;
 
     public Long getStaticId() {
         return (staticTypeName != null) ? staticTypeName.getId() : null;

@@ -87,6 +87,7 @@ public class TranslateAdminController {
         List<StaticTypeEntity> list = staticTypeAdminService.getTypes();
         model.addAttribute("types",list);
 
+        model.addAttribute("staticId",response.getStaticId());
         model.addAttribute("id",id);
         model.addAttribute("object",response);
         return "admin/translation/edit";
