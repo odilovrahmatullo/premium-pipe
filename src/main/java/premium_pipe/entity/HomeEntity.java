@@ -32,14 +32,14 @@ public class HomeEntity {
     private Map<String, String> description2;
 
     @Convert(converter = HashMapConverter.class)
-    @Column(name = "opened_date")
+    @Column(name = "opened_date",columnDefinition = "TEXT")
     private Map<String, String> openedDate;
 
     @Convert(converter = HashMapConverter.class)
-    @Column(name = "employees_count")
+    @Column(name = "employees_count",columnDefinition = "TEXT")
     private Map<String, String> numberOfEmployees;
 
-    @Column(name = "neighbor_countries")
+    @Column(name = "neighbor_countries",columnDefinition = "TEXT")
     @Convert(converter = HashMapConverter.class)
     private Map<String, String> neighborCountries;
 

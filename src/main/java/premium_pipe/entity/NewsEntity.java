@@ -27,6 +27,7 @@ public class NewsEntity {
     private Map<String, String> title;
 
     @Convert(converter = HashMapConverter.class)
+    @Column(columnDefinition = "TEXT")
     private Map<String, String> description;
 
     @Column(name = "image")

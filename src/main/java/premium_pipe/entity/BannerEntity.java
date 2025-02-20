@@ -23,20 +23,26 @@ public class BannerEntity {
     private Long id;
 
     @Convert(converter = HashMapConverter.class)
+    @Column(columnDefinition = "TEXT")
     private Map<String, String> title;
 
+    @Column(columnDefinition = "TEXT")
     @Convert(converter = HashMapConverter.class)
     private Map<String, String> description;
 
+    @Column(columnDefinition = "TEXT")
     @Convert(converter = HashMapConverter.class)
     private Map<String, String> success;
 
+    @Column(columnDefinition = "TEXT")
     @Convert(converter = HashMapConverter.class)
     private Map<String, String> experience;
 
+    @Column(columnDefinition = "TEXT")
     @Convert(converter = HashMapConverter.class)
     private Map<String, String> projects;
 
+    @Column(columnDefinition = "TEXT")
     @Convert(converter = HashMapConverter.class)
     private Map<String, String> customers;
 
