@@ -58,4 +58,13 @@ public class TranslateAdminService {
         translationRepository.delete(translateEntity);
     }
 
+    public void update(TranslateEntity translate, TranslateAdminRequest request) {
+        TranslateEntity updated = translationMapper.update(request,translate);
+        if(!updated.getType().getId().equals(request.getStaticId())){
+            StaticTypeEntity staticTypeEntity = staticTypeAdminService.getEntity(request.getStaticId());
+            updated.setType(staticTypeEntity);
+        }
+        translationRepository.save(updated);
+    }
+
 }

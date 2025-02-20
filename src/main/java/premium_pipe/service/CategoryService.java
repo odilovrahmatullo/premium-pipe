@@ -76,6 +76,7 @@ public class CategoryService {
                 .id(category.getId())
                 .name(localizeMapper.translate(category.getName(),request))
                 .image(domainName+category.getImage())
+                .slug(category.getSlug())
                 .description(localizeMapper.translate(category.getDescription(),request))
                 .products(products)
                 .build();

@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RestController;
 import premium_pipe.model.request.RequestParams;
 import premium_pipe.model.response.CategoryApiDetailsResponse;
 import premium_pipe.model.response.CategoryApiResponse;
-import premium_pipe.model.response.ProductResponse;
 import premium_pipe.service.CategoryService;
 
 @RestController

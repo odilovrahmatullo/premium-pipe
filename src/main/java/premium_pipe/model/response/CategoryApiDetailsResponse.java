@@ -18,6 +18,7 @@ public class CategoryApiDetailsResponse {
     private String name;
     private String description;
     private String image;
+    private String slug;
     private List<CategoryApiDetailsResponse> allCategories;
     private List<ProductResponse> products;
 }

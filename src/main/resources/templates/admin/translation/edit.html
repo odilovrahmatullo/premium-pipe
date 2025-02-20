@@ -1,0 +1,128 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en" data-bs-theme="auto">
+
+<head th:replace="~{admin/blocks/header::adminHead('Translations')}"></head>
+
+<body>
+
+<nav th:replace="~{admin/blocks/navbar::navbar}"></nav>
+
+<!-- MAIN CONTENT -->
+<div class="main-content">
+    <div class="messages">
+        <div class="alert alert notifs" role="alert"></div>
+    </div>
+    <div class="container-fluid">
+        <div class="row justify-content-center">
+            <div class="col-12">
+                <!-- Header -->
+                <div class="header mb-0">
+                    <div class="header-body top-scroller">
+                        <div class="row align-items-center">
+                            <div class="col">
+                                <!-- Title -->
+                                <h1 class="header-title text-truncate">
+                                    Translations
+                                </h1>
+                            </div>
+                        </div> <!-- / .row -->
+                    </div>
+                    <div class="card mt-4">
+                        <div class="card-body" style="padding: 20px;">
+                            <nav aria-label="breadcrumb">
+                                <ol class="breadcrumb">
+                                    <li class="breadcrumb-item"><a href="#">Main</a></li>
+                                    <li class="breadcrumb-item"><a th:href="@{/admin/translation/}">Translations</a></li>
+                                    <li class="breadcrumb-item active" aria-current="page">
+                                        Translation
+                                    </li>
+                                </ol>
+                            </nav>
+                        </div>
+                    </div>
+                    <!-- Content -->
+                    <form role="form" class="row" method="post" enctype="multipart/form-data"
+                          th:action="@{/admin/translation/{id}/edit(id=${id})}" th:object="${object}">
+                        <div class="col-12 col-xl-8">
+                            <div class="card mt-3">
+                                <div class="card-body p-5">
+
+                                    <div class="row">
+                                        <!-- Keyword -->
+                                        <div class="col-md-3">
+                                            <div class="form-group">
+                                                <label class="form-label required">Keyword</label>
+                                                <input type="text" class="form-control" th:field="*{keyword}">
+                                                <div class="invalid-feedback" style="display: block;"
+                                                     th:if="${#fields.hasErrors('keyword')}" th:errors="*{keyword}"></div>
+                                            </div>
+                                        </div>
+
+                                        <!-- KeyUz -->
+                                        <div class="col-md-3">
+                                            <div class="form-group">
+                                                <label class="form-label required">KeyUz</label>
+                                                <input type="text" class="form-control" th:field="*{keyUz}">
+                                                <div class="invalid-feedback" style="display: block;"
+                                                     th:if="${#fields.hasErrors('keyUz')}" th:errors="*{keyUz}"></div>
+                                            </div>
+                                        </div>
+
+                                        <!-- KeyRu -->
+                                        <div class="col-md-3">
+                                            <div class="form-group">
+                                                <label class="form-label required">KeyRu</label>
+                                                <input type="text" class="form-control" th:field="*{keyRu}">
+                                                <div class="invalid-feedback" style="display: block;"
+                                                     th:if="${#fields.hasErrors('keyRu')}" th:errors="*{keyRu}"></div>
+                                            </div>
+                                        </div>
+
+                                        <!-- KeyEn -->
+                                        <div class="col-md-3">
+                                            <div class="form-group">
+                                                <label class="form-label required">KeyEn</label>
+                                                <input type="text" class="form-control" th:field="*{keyEn}">
+                                                <div class="invalid-feedback" style="display: block;"
+                                                     th:if="${#fields.hasErrors('keyEn')}" th:errors="*{keyEn}"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Static Type -->
+                                    <div class="row mt-3">
+                                        <div class="col-md-12">
+                                            <div class="form-group">
+                                                <label class="form-label-required">StaticTypes</label>
+                                                <select th:field="*{staticId}" class="form-control">
+                                                    <option value="">All</option>
+                                                    <option th:each="type : ${types}"
+                                                            th:value="${type.id}"
+                                                            th:text="${type.name}"></option>
+                                                </select>
+                                                <div class="invalid-feedback" style="display: block;"
+                                                     th:if="${#fields.hasErrors('staticId')}" th:errors="*{staticId}"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="btn-box text-end">
+                                        <a th:href="@{/admin/translation}" class="btn w-30 btn-secondary">Cancel</a>
+                                        <input type="submit" href="#" class="btn w-40 btn-primary" value="Save">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                    <!-- Content End -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:replace="~{admin/blocks/scripts::scripts}"></div>
+<script th:src="@{/admin/assets/js/editor.js}"></script>
+
+</body>
+
+</html>

@@ -21,11 +21,12 @@ public class TranslateEntity {
     @JoinColumn(name = "static_type")
     private StaticTypeEntity type;
 
+    @Column(columnDefinition = "TEXT")
     private String keyword;
-    @Column(name = "key_uz")
+    @Column(name = "key_uz",columnDefinition = "TEXT")
     private String keyUz;
-    @Column(name = "key_ru")
+    @Column(name = "key_ru",columnDefinition = "TEXT")
     private String keyRu;
-    @Column(name = "key_en")
+    @Column(name = "key_en",columnDefinition = "TEXT")
     private String keyEn;
 }

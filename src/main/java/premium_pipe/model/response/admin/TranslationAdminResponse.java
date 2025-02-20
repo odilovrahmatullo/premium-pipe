@@ -17,4 +17,10 @@ public class TranslationAdminResponse {
     private String keyRu;
     private String keyEn;
     private StaticTypeEntity staticTypeName;
+    private Long staticId;
+
+    public Long getStaticId() {
+        return (staticTypeName != null) ? staticTypeName.getId() : null;
+    }
 }
+
